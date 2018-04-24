@@ -1,0 +1,28 @@
+{
+    "name": "portis",
+    "version": "1.0.5",
+    "description": "Portis SDK",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "scripts": {
+        "build": "tsc",
+        "start": "tsc -w",
+        "github": "cd .. && git subtree push --prefix portis-sdk sdk master",
+        "deploy": "npm run build && npm run github && npm publish"
+    },
+    "keywords": [],
+    "author": "Portis <info@portis.io>",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/portis-project/portis-sdk.git"
+    },
+    "bugs": {
+        "url": "https://github.com/portis-project/portis-sdk/issues"
+    },
+    "homepage": "https://github.com/portis-project/portis-sdk#readme",
+    "dependencies": {},
+    "devDependencies": {
+        "typescript": "2.7.2"
+    }
+}
