@@ -50,7 +50,7 @@ web3.currentProvider.isPortis
 
 ## Configuration Options
 
-### The configuration options object should be passed along when initializing the Portis provider: 
+### The configuration options object should be passed along when initializing the Portis provider:
 
 ```js
 web3js = new Web3(new portis.Provider({
@@ -61,8 +61,9 @@ web3js = new Web3(new portis.Provider({
 
 
 ### ```network```
-**Type:** `String`  
-**Default Value:**  `mainnet`
+**Type:** `String`
+
+**Default Value:**  `ropsten`
 
 Determines which Ethereum network all web3 methods will communicate with. You can set Portis to work with any one of the following networks:
 1. mainnet
@@ -71,13 +72,15 @@ Determines which Ethereum network all web3 methods will communicate with. You ca
 1. rinkeby
 
 ### ```appName```
-**Type:** `String`  
+**Type:** `String`
+
 **Default Value:** ```null```
 
 If provided, the appName will be displayed in various locations throughout the Portis iframe, providing the user context of the underlying DApp they are interacting with.
 
 ### ```appLogoUrl```
-**Type:** `String`  
+**Type:** `String`
+
 **Default Value:** ```null```
 
 Should be a valid url pointing to the DApp logo. If provided, the DApp logo will be displayed in various locations throughout the Portis iframe, providing the user context of the underlying DApp they are interacting with.
