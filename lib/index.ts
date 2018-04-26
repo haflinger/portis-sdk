@@ -7,13 +7,17 @@ export class Provider {
     queue: { payload: Payload, cb: callbackFunction }[] = [];
     iframe: HTMLIFrameElement;
     authenticated = false;
-    network: Network;
-    portisLocation: string;
-    isPortis: boolean = true;
+    isPortis = true;
+    referrerAppOptions;
 
-    constructor(opts: { network?: Network, portisLocation?: string } = {}) {
-        this.network = opts.network || 'ropsten';
-        this.portisLocation = opts.portisLocation || 'https://app.portis.io';
+    constructor(opts: { network?: Network, appName?: string, appLogoUrl?: string, portisLocation?: string } = {}) {
+        this.referrerAppOptions = {
+            network: opts.network || 'ropsten',
+            appHost: location.host,
+            appName: opts.appName,
+            appLogoUrl: opts.appLogoUrl,
+            portisLocation: opts.portisLocation || 'https://app.portis.io',
+        };
         this.iframe = this.createIframe();
         this.listen();
     }
@@ -64,7 +68,7 @@ export class Provider {
         }
 
         iframe.id = 'PT_IFRAME';
-        iframe.src = `${this.portisLocation}/send/?network=${this.network}&app=${location.host}`;
+        iframe.src = `${this.referrerAppOptions.portisLocation}/send/?p=${btoa(JSON.stringify(this.referrerAppOptions))}`;
         document.body.appendChild(iframe);
         return iframe;
     }
@@ -113,7 +117,7 @@ export class Provider {
 
     private listen() {
         window.addEventListener('message', (evt) => {
-            if (evt.origin === this.portisLocation) {
+            if (evt.origin === this.referrerAppOptions.portisLocation) {
                 switch (evt.data.msgType) {
 
                     case postMessages.PT_AUTHENTICATED: {
