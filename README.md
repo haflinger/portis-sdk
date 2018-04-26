@@ -42,22 +42,45 @@ startApp()
 This will set Portis as the fallback for when Mist/MetaMask are unavailable.
 
 
-If the Portis provider injected properly isPortis will be true
+If the Portis provider was injected properly, then ```isPortis``` will be ```true```
 
 ```js
 web3.currentProvider.isPortis
 ```
 
-## Development mode
-You can set Portis to work with one of the test networks:
+## Configuration Options
+
+### The configuration options object should be passed along when initializing the Portis provider: 
+
+```js
+web3js = new Web3(new portis.Provider({
+    network: 'ropsten',
+    appName: 'MyDApp'
+}));
+```
+
+
+### ```network```
+**Type:** `String`  
+**Default Value:**  `mainnet`
+
+Determines which Ethereum network all web3 methods will communicate with. You can set Portis to work with any one of the following networks:
+1. mainnet
 1. ropsten
 1. kovan
 1. rinkeby
 
-Just change the `network` variable when you initialize the Portis provider:
-```js
-web3js = new Web3(new portis.Provider({ network: 'ropsten' }));
-```
+### ```appName```
+**Type:** `String`  
+**Default Value:** ```null```
+
+If provided, the appName will be displayed in various locations throughout the Portis iframe, providing the user context of the underlying DApp they are interacting with.
+
+### ```appLogoUrl```
+**Type:** `String`  
+**Default Value:** ```null```
+
+Should be a valid url pointing to the DApp logo. If provided, the DApp logo will be displayed in various locations throughout the Portis iframe, providing the user context of the underlying DApp they are interacting with.
 
 ## Community
 
