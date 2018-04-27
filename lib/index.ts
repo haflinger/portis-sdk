@@ -7,6 +7,8 @@ export class Provider {
     queue: { payload: Payload, cb: callbackFunction }[] = [];
     iframe: HTMLIFrameElement;
     authenticated = false;
+    account: string | null = null;
+    network: string | null = null;
     isPortis = true;
     referrerAppOptions;
 
@@ -27,7 +29,38 @@ export class Provider {
     }
 
     send(payload: Payload) {
-        throw new Error(`The Portis Web3 object does not support synchronous methods like ${payload.method} without a callback parameter.`);
+        let result;
+
+        switch (payload.method) {
+
+            case 'eth_accounts':
+                const account = this.account;
+                result = account ? [account] : [];
+                break;
+
+            case 'eth_coinbase':
+                result = this.account;
+                break;
+
+            case 'net_version':
+                result = this.network;
+                break;
+
+            case 'eth_uninstallFilter':
+                this.sendAsync(payload, (_) => _);
+                result = true;
+                break;
+
+            default:
+                throw new Error(`The Portis Web3 object does not support synchronous methods like ${payload.method} without a callback parameter.`);
+
+        }
+
+        return {
+            id: payload.id,
+            jsonrpc: payload.jsonrpc,
+            result: result,
+        }
     }
 
     isConnected() {
@@ -129,6 +162,15 @@ export class Provider {
                     case postMessages.PT_RESPONSE: {
                         const id = evt.data.response.id;
                         this.requests[id].cb(null, evt.data.response);
+
+                        if (this.requests[id].payload.method === 'eth_accounts' || this.requests[id].payload.method === 'eth_coinbase') {
+                            this.account = evt.data.response.result[0];
+                        }
+
+                        if (this.requests[id].payload.method === 'net_version') {
+                            this.network = evt.data.response.result;
+                        }
+
                         this.dequeue();
                         break;
                     }

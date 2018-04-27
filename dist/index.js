@@ -6,9 +6,16 @@ var Provider = /** @class */ (function () {
         this.requests = {};
         this.queue = [];
         this.authenticated = false;
+        this.account = null;
+        this.network = null;
         this.isPortis = true;
-        this.network = opts.network || 'ropsten';
-        this.portisLocation = opts.portisLocation || 'https://app.portis.io';
+        this.referrerAppOptions = {
+            network: opts.network || 'ropsten',
+            appHost: location.host,
+            appName: opts.appName,
+            appLogoUrl: opts.appLogoUrl,
+            portisLocation: opts.portisLocation || 'https://app.portis.io',
+        };
         this.iframe = this.createIframe();
         this.listen();
     }
@@ -16,7 +23,30 @@ var Provider = /** @class */ (function () {
         this.enqueue(payload, cb);
     };
     Provider.prototype.send = function (payload) {
-        throw new Error("The Portis Web3 object does not support synchronous methods like " + payload.method + " without a callback parameter.");
+        var result;
+        switch (payload.method) {
+            case 'eth_accounts':
+                var account = this.account;
+                result = account ? [account] : [];
+                break;
+            case 'eth_coinbase':
+                result = this.account;
+                break;
+            case 'net_version':
+                result = this.network;
+                break;
+            case 'eth_uninstallFilter':
+                this.sendAsync(payload, function (_) { return _; });
+                result = true;
+                break;
+            default:
+                throw new Error("The Portis Web3 object does not support synchronous methods like " + payload.method + " without a callback parameter.");
+        }
+        return {
+            id: payload.id,
+            jsonrpc: payload.jsonrpc,
+            result: result,
+        };
     };
     Provider.prototype.isConnected = function () {
         return true;
@@ -52,7 +82,7 @@ var Provider = /** @class */ (function () {
             Object.keys(iframeMobileStyleProps).forEach(function (prop) { return iframe.style[prop] = iframeMobileStyleProps[prop]; });
         }
         iframe.id = 'PT_IFRAME';
-        iframe.src = this.portisLocation + "/send/?network=" + this.network + "&app=" + location.host;
+        iframe.src = this.referrerAppOptions.portisLocation + "/send/?p=" + btoa(JSON.stringify(this.referrerAppOptions));
         document.body.appendChild(iframe);
         return iframe;
     };
@@ -93,7 +123,7 @@ var Provider = /** @class */ (function () {
     Provider.prototype.listen = function () {
         var _this = this;
         window.addEventListener('message', function (evt) {
-            if (evt.origin === _this.portisLocation) {
+            if (evt.origin === _this.referrerAppOptions.portisLocation) {
                 switch (evt.data.msgType) {
                     case exports.postMessages.PT_AUTHENTICATED: {
                         _this.authenticated = true;
@@ -103,6 +133,12 @@ var Provider = /** @class */ (function () {
                     case exports.postMessages.PT_RESPONSE: {
                         var id = evt.data.response.id;
                         _this.requests[id].cb(null, evt.data.response);
+                        if (_this.requests[id].payload.method === 'eth_accounts' || _this.requests[id].payload.method === 'eth_coinbase') {
+                            _this.account = evt.data.response.result[0];
+                        }
+                        if (_this.requests[id].payload.method === 'net_version') {
+                            _this.network = evt.data.response.result;
+                        }
                         _this.dequeue();
                         break;
                     }

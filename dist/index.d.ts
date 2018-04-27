@@ -16,15 +16,22 @@ export declare class Provider {
     }[];
     iframe: HTMLIFrameElement;
     authenticated: boolean;
-    network: Network;
-    portisLocation: string;
+    account: string | null;
+    network: string | null;
     isPortis: boolean;
+    referrerAppOptions: any;
     constructor(opts?: {
         network?: Network;
+        appName?: string;
+        appLogoUrl?: string;
         portisLocation?: string;
     });
     sendAsync(payload: Payload, cb: callbackFunction): void;
-    send(payload: Payload): void;
+    send(payload: Payload): {
+        id: number;
+        jsonrpc: string;
+        result: any;
+    };
     isConnected(): boolean;
     private createIframe();
     private showIframe();
