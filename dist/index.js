@@ -151,8 +151,13 @@ var Provider = /** @class */ (function () {
                         break;
                     }
                     case exports.postMessages.PT_USER_DENIED: {
-                        var id = evt.data.response.id;
-                        _this.requests[id].cb(new Error('User denied transaction signature.'));
+                        var id = evt.data.response ? evt.data.response.id : null;
+                        if (id) {
+                            _this.requests[id].cb(new Error('User denied transaction signature.'));
+                        }
+                        else {
+                            _this.queue.forEach(function (item) { return item.cb(new Error('User denied transaction signature.')); });
+                        }
                         _this.dequeue();
                         break;
                     }
