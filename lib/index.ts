@@ -186,8 +186,14 @@ export class Provider {
                     }
 
                     case postMessages.PT_USER_DENIED: {
-                        const id = evt.data.response.id;
-                        this.requests[id].cb(new Error('User denied transaction signature.'));
+                        const id = evt.data.response ? evt.data.response.id : null;
+
+                        if (id) {
+                            this.requests[id].cb(new Error('User denied transaction signature.'));
+                        } else {
+                            this.queue.forEach(item => item.cb(new Error('User denied transaction signature.')));
+                        }
+
                         this.dequeue();
                         break;
                     }
