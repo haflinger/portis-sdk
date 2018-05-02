@@ -20,8 +20,8 @@ export class Provider {
             appLogoUrl: opts.appLogoUrl,
             portisLocation: opts.portisLocation || 'https://app.portis.io',
         };
-        this.iframe = this.createIframe();
         this.listen();
+        this.iframe = this.createIframe();
     }
 
     sendAsync(payload: Payload, cb: callbackFunction) {
@@ -139,8 +139,8 @@ export class Provider {
         }
 
         const { payload, cb } = this.queue.shift() as { payload: Payload, cb: callbackFunction };
-        this.sendPostMessage(postMessages.PT_HANDLE_REQUEST, payload);
         this.requests[payload.id] = { payload, cb };
+        this.sendPostMessage(postMessages.PT_HANDLE_REQUEST, payload);
         this.dequeue();
     }
 
