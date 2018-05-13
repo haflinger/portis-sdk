@@ -60,7 +60,7 @@ web3.currentProvider.isPortis
 
 ```js
 web3js = new Web3(new portis.PortisProvider({
-    network: 'mainnet',
+    network: 'ropsten',
     appName: 'MyDApp'
 }));
 ```
