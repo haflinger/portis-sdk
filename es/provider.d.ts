@@ -1,18 +1,15 @@
-declare global  {
-    interface Window {
-        opera: any;
-    }
-}
-export declare class Provider {
+import { Payload, Network } from "./types";
+export declare class PortisProvider {
+    portisClient: string;
     requests: {
         [id: string]: {
             payload: Payload;
-            cb: callbackFunction;
+            cb;
         };
     };
     queue: {
         payload: Payload;
-        cb: callbackFunction;
+        cb;
     }[];
     iframe: HTMLIFrameElement;
     authenticated: boolean;
@@ -24,9 +21,8 @@ export declare class Provider {
         network?: Network;
         appName?: string;
         appLogoUrl?: string;
-        portisLocation?: string;
     });
-    sendAsync(payload: Payload, cb: callbackFunction): void;
+    sendAsync(payload: Payload, cb: any): void;
     send(payload: Payload): {
         id: number;
         jsonrpc: string;
@@ -40,23 +36,4 @@ export declare class Provider {
     private dequeue();
     private sendPostMessage(msgType, payload?);
     private listen();
-    private isMobile();
 }
-export interface callbackFunction {
-    (error: any, response?: any): void;
-}
-export interface Payload {
-    id: number;
-    jsonrpc: string;
-    method: string;
-    params: any[];
-}
-export declare type Network = 'mainnet' | 'ropsten' | 'kovan' | 'rinkeby';
-export declare const postMessages: {
-    PT_RESPONSE: string;
-    PT_HANDLE_REQUEST: string;
-    PT_AUTHENTICATED: string;
-    PT_SHOW_IFRAME: string;
-    PT_HIDE_IFRAME: string;
-    PT_USER_DENIED: string;
-};

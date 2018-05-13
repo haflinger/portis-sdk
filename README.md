@@ -35,7 +35,7 @@ if (typeof web3 !== 'undefined') {
     web3js = new Web3(web3.currentProvider);
 } else {
     // Fallback - use Portis
-    web3js = new Web3(new portis.Provider({ network: 'mainnet' }));
+    web3js = new Web3(new portis.PortisProvider());
 }
 
 // Now you can start your app & access web3 freely:
@@ -59,7 +59,7 @@ web3.currentProvider.isPortis
 ### A configuration options object can be passed along when initializing the Portis provider:
 
 ```js
-web3js = new Web3(new portis.Provider({
+web3js = new Web3(new portis.PortisProvider({
     network: 'mainnet',
     appName: 'MyDApp'
 }));
@@ -69,7 +69,7 @@ web3js = new Web3(new portis.Provider({
 ### ```network```
 **Type:** `String`
 
-**Default Value:**  `ropsten`
+**Default Value:**  `mainnet`
 
 Determines which Ethereum network all web3 methods will communicate with. You can set Portis to work with any one of the following networks:
 1. mainnet

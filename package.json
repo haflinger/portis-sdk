@@ -1,17 +1,29 @@
 {
     "name": "portis",
-    "version": "1.0.8",
+    "version": "1.1.0",
     "description": "Portis SDK",
-    "main": "dist/index.js",
-    "types": "dist/index.d.ts",
+    "main": "lib/index.js",
+    "module": "es/index.js",
+    "browser": "dist/bundle.js",
+    "types": "dist/bundle.d.ts",
     "scripts": {
-        "build": "tsc",
+        "clean": "rimraf dist es lib",
+        "prebuild": "npm run clean",
+        "build": "npm run build:lib & npm run build:umd & npm run build:umd:min",
+        "build:lib": "tsc --outDir lib --module commonjs",
+        "build:es": "tsc --outDir es --module es2015",
+        "build:umd": "npm run build:es && rollup --config rollup.config.js && npm run dts-bundle",
+        "build:umd:min": "npm run build:es && rollup --config rollup.config.min.js && npm run dts-bundle",
+        "dts-bundle": "dts-bundle --name dist/bundle --main es --outputAsModuleFolder",
         "start": "tsc -w",
-        "github": "cd .. && git subtree push --prefix portis-sdk sdk master",
-        "deploy": "npm run build && npm run github && npm publish"
+        "git": "git push",
+        "deploy": "npm run build && npm run git && npm publish"
     },
-    "keywords": [],
-    "author": "Portis <info@portis.io>",
+    "keywords": [
+        "blockchain",
+        "ethereum"
+    ],
+    "author": "Itay Radotzki <itay@portis.io>, Tom Teman <tom@portis.io>",
     "license": "MIT",
     "repository": {
         "type": "git",
@@ -23,6 +35,16 @@
     "homepage": "https://github.com/portis-project/portis-sdk#readme",
     "dependencies": {},
     "devDependencies": {
+        "dts-bundle": "0.7.3",
+        "pascal-case": "2.0.1",
+        "rimraf": "2.6.1",
+        "rollup": "0.47.4",
+        "rollup-plugin-commonjs": "8.1.0",
+        "rollup-plugin-node-builtins": "2.1.0",
+        "rollup-plugin-node-globals": "1.1.0",
+        "rollup-plugin-node-resolve": "3.0.0",
+        "rollup-plugin-sourcemaps": "0.4.1",
+        "rollup-plugin-uglify": "2.0.0",
         "typescript": "2.7.2"
     }
 }
