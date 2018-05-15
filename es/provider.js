@@ -61,36 +61,43 @@ var PortisProvider = /** @class */ (function () {
     PortisProvider.prototype.createIframe = function () {
         var iframe = document.createElement('iframe');
         var iframeStyleProps = {
+            'display': 'none',
             'position': 'fixed',
-            'top': '20px',
+            'top': '10px',
             'right': '20px',
             'height': '525px',
             'width': '390px',
             'z-index': '2147483647',
-            'margin-top': '0px',
-            'transition': 'margin-top 0.7s',
-            'box-shadow': 'rgba(0, 0, 0, 0.1) 7px 10px 60px 10px',
-            'border-radius': '3px',
-            'border': '1px solid #565656',
-            'display': 'none',
+            'box-shadow': '0 5px 40px rgba(0,0,0,.16)',
+            'border-radius': '8px',
+            'border': 'none',
+            'animation': 'portis-entrance 250ms ease-in-out forwards',
+            'opacity': '0',
         };
         var iframeMobileStyleProps = {
+            'display': 'none',
+            'position': 'fixed',
+            'z-index': '2147483647',
             'width': '100%',
             'height': '100%',
             'top': '0',
             'left': '0',
             'right': '0',
             'border': 'none',
-            'border-radius': '0',
         };
-        Object.keys(iframeStyleProps).forEach(function (prop) { return iframe.style[prop] = iframeStyleProps[prop]; });
-        iframe.scrolling = 'no';
+        var style = document.createElement('style');
+        style.innerHTML = '@keyframes portis-entrance { 100% { opacity: 1; top: 20px; } }';
         if (isMobile()) {
             Object.keys(iframeMobileStyleProps).forEach(function (prop) { return iframe.style[prop] = iframeMobileStyleProps[prop]; });
         }
+        else {
+            Object.keys(iframeStyleProps).forEach(function (prop) { return iframe.style[prop] = iframeStyleProps[prop]; });
+        }
+        iframe.scrolling = 'no';
         iframe.id = 'PT_IFRAME';
         iframe.src = this.portisClient + "/send/?p=" + btoa(JSON.stringify(this.referrerAppOptions));
         document.body.appendChild(iframe);
+        document.head.appendChild(style);
         return iframe;
     };
     PortisProvider.prototype.showIframe = function () {
