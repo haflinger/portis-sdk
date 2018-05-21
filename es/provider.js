@@ -1,4 +1,5 @@
 import { isMobile } from "./utils";
+var sdkVersion = '1.2.0';
 var postMessages = {
     PT_RESPONSE: 'PT_RESPONSE',
     PT_HANDLE_REQUEST: 'PT_HANDLE_REQUEST',
@@ -9,7 +10,6 @@ var postMessages = {
 };
 var PortisProvider = /** @class */ (function () {
     function PortisProvider(opts) {
-        if (opts === void 0) { opts = {}; }
         this.portisClient = 'https://app.portis.io';
         this.requests = {};
         this.queue = [];
@@ -17,11 +17,13 @@ var PortisProvider = /** @class */ (function () {
         this.account = null;
         this.network = null;
         this.isPortis = true;
+        if (!opts.apiKey) {
+            throw 'apiKey is missing. Please check your apiKey in the Portis dashboard: https://app.portis.io/dashboard';
+        }
         this.referrerAppOptions = {
+            sdkVersion: sdkVersion,
             network: opts.network || 'mainnet',
-            appName: opts.appName,
-            appLogoUrl: opts.appLogoUrl,
-            appHost: location.host,
+            apiKey: opts.apiKey,
         };
         this.iframe = this.createIframe();
         this.listen();
@@ -59,58 +61,67 @@ var PortisProvider = /** @class */ (function () {
         return true;
     };
     PortisProvider.prototype.createIframe = function () {
-        var iframe = document.createElement('iframe');
-        var iframeStyleProps = {
-            'display': 'none',
-            'position': 'fixed',
-            'top': '10px',
-            'right': '20px',
-            'height': '525px',
-            'width': '390px',
-            'z-index': '2147483647',
-            'box-shadow': '0 5px 40px rgba(0,0,0,.16)',
-            'border-radius': '8px',
-            'border': 'none',
-            'animation': 'portis-entrance 250ms ease-in-out forwards',
-            'opacity': '0',
-        };
-        var iframeMobileStyleProps = {
-            'display': 'none',
-            'position': 'fixed',
-            'z-index': '2147483647',
-            'width': '100%',
-            'height': '100%',
-            'top': '0',
-            'left': '0',
-            'right': '0',
-            'border': 'none',
-        };
-        var style = document.createElement('style');
-        style.innerHTML = '@keyframes portis-entrance { 100% { opacity: 1; top: 20px; } }';
-        if (isMobile()) {
-            Object.keys(iframeMobileStyleProps).forEach(function (prop) { return iframe.style[prop] = iframeMobileStyleProps[prop]; });
-        }
-        else {
-            Object.keys(iframeStyleProps).forEach(function (prop) { return iframe.style[prop] = iframeStyleProps[prop]; });
-        }
-        iframe.scrolling = 'no';
-        iframe.id = 'PT_IFRAME';
-        iframe.src = this.portisClient + "/send/?p=" + btoa(JSON.stringify(this.referrerAppOptions));
-        document.body.appendChild(iframe);
-        document.head.appendChild(style);
-        return iframe;
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            window.addEventListener('load', function () {
+                var iframe = document.createElement('iframe');
+                var iframeStyleProps = {
+                    'display': 'none',
+                    'position': 'fixed',
+                    'top': '10px',
+                    'right': '20px',
+                    'height': '525px',
+                    'width': '390px',
+                    'z-index': '2147483647',
+                    'box-shadow': '0 5px 40px rgba(0,0,0,.16)',
+                    'border-radius': '8px',
+                    'border': 'none',
+                    'animation': 'portis-entrance 250ms ease-in-out forwards',
+                    'opacity': '0',
+                };
+                var iframeMobileStyleProps = {
+                    'display': 'none',
+                    'position': 'fixed',
+                    'z-index': '2147483647',
+                    'width': '100%',
+                    'height': '100%',
+                    'top': '0',
+                    'left': '0',
+                    'right': '0',
+                    'border': 'none',
+                };
+                var style = document.createElement('style');
+                style.innerHTML = '@keyframes portis-entrance { 100% { opacity: 1; top: 20px; } }';
+                if (isMobile()) {
+                    Object.keys(iframeMobileStyleProps).forEach(function (prop) { return iframe.style[prop] = iframeMobileStyleProps[prop]; });
+                }
+                else {
+                    Object.keys(iframeStyleProps).forEach(function (prop) { return iframe.style[prop] = iframeStyleProps[prop]; });
+                }
+                iframe.scrolling = 'no';
+                iframe.id = 'PT_IFRAME';
+                iframe.src = _this.portisClient + "/send/?p=" + btoa(JSON.stringify(_this.referrerAppOptions));
+                document.body.appendChild(iframe);
+                document.head.appendChild(style);
+                resolve(iframe);
+            }, false);
+        });
     };
     PortisProvider.prototype.showIframe = function () {
-        this.iframe.style.display = 'block';
-        if (isMobile()) {
-            document.body.style.overflow = 'hidden';
-        }
+        this.iframe.then(function (iframe) {
+            iframe.style.display = 'block';
+            if (isMobile()) {
+                document.body.style.overflow = 'hidden';
+            }
+        });
     };
     PortisProvider.prototype.hideIframe = function () {
-        this.iframe.style.display = 'none';
-        if (isMobile()) {
-            document.body.style.overflow = 'inherit';
-        }
+        this.iframe.then(function (iframe) {
+            iframe.style.display = 'none';
+            if (isMobile()) {
+                document.body.style.overflow = 'inherit';
+            }
+        });
     };
     PortisProvider.prototype.enqueue = function (payload, cb) {
         this.queue.push({ payload: payload, cb: cb });
@@ -136,9 +147,11 @@ var PortisProvider = /** @class */ (function () {
         }
     };
     PortisProvider.prototype.sendPostMessage = function (msgType, payload) {
-        if (this.iframe.contentWindow) {
-            this.iframe.contentWindow.postMessage({ msgType: msgType, payload: payload }, '*');
-        }
+        this.iframe.then(function (iframe) {
+            if (iframe.contentWindow) {
+                iframe.contentWindow.postMessage({ msgType: msgType, payload: payload }, '*');
+            }
+        });
     };
     PortisProvider.prototype.listen = function () {
         var _this = this;

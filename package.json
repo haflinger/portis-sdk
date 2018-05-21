@@ -1,6 +1,6 @@
 {
     "name": "portis",
-    "version": "1.1.1",
+    "version": "1.2.0",
     "description": "Portis SDK",
     "main": "lib/index.js",
     "module": "es/index.js",
@@ -16,8 +16,7 @@
         "build:umd:min": "npm run build:es && rollup --config rollup.config.min.js && npm run dts-bundle",
         "dts-bundle": "dts-bundle --name dist/bundle --main es --outputAsModuleFolder",
         "start": "tsc -w",
-        "git": "git push",
-        "deploy": "npm run build && npm run git && npm publish"
+        "deploy": "npm run build && npm publish"
     },
     "keywords": [
         "blockchain",

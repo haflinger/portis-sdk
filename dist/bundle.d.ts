@@ -12,16 +12,15 @@ export class PortisProvider {
         payload: Payload;
         cb;
     }[];
-    iframe: HTMLIFrameElement;
+    iframe: Promise<HTMLIFrameElement>;
     authenticated: boolean;
     account: string | null;
     network: string | null;
     isPortis: boolean;
     referrerAppOptions: any;
-    constructor(opts?: {
+    constructor(opts: {
+        apiKey: string;
         network?: Network;
-        appName?: string;
-        appLogoUrl?: string;
     });
     sendAsync(payload: Payload, cb: any): void;
     send(payload: Payload): {
