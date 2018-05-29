@@ -80,7 +80,7 @@ export class PortisProvider {
 
     private createIframe(): Promise<HTMLIFrameElement> {
         return new Promise((resolve, reject) => {
-            window.addEventListener('load', () => {
+            const onload = () => {
                 const iframe = document.createElement('iframe');
                 const iframeStyleProps = {
                     'display': 'none',
@@ -122,7 +122,13 @@ export class PortisProvider {
                 document.body.appendChild(iframe);
                 document.head.appendChild(style);
                 resolve(iframe);
-            }, false);
+            }
+
+            if (['loaded', 'interactive', 'complete'].indexOf(document.readyState) > -1) {
+                onload();
+            } else {
+                window.addEventListener('load', onload.bind(this), false);
+            }
         });
     }
 

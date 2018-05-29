@@ -75,7 +75,7 @@ var PortisProvider = /** @class */ (function () {
     PortisProvider.prototype.createIframe = function () {
         var _this = this;
         return new Promise(function (resolve, reject) {
-            window.addEventListener('load', function () {
+            var onload = function () {
                 var iframe = document.createElement('iframe');
                 var iframeStyleProps = {
                     'display': 'none',
@@ -116,7 +116,13 @@ var PortisProvider = /** @class */ (function () {
                 document.body.appendChild(iframe);
                 document.head.appendChild(style);
                 resolve(iframe);
-            }, false);
+            };
+            if (['loaded', 'interactive', 'complete'].indexOf(document.readyState) > -1) {
+                onload();
+            }
+            else {
+                window.addEventListener('load', onload.bind(_this), false);
+            }
         });
     };
     PortisProvider.prototype.showIframe = function () {
