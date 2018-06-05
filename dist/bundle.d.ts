@@ -12,7 +12,10 @@ export class PortisProvider {
         payload: Payload;
         cb;
     }[];
-    iframe: Promise<HTMLIFrameElement>;
+    elements: Promise<{
+        wrapper: HTMLDivElement;
+        iframe: HTMLIFrameElement;
+    }>;
     authenticated: boolean;
     account: string | null;
     network: string | null;

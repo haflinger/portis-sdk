@@ -1,5 +1,6 @@
 import { isMobile } from "./utils";
-var sdkVersion = '1.2.0';
+import { css } from './style';
+var sdkVersion = '1.2.2';
 var postMessages = {
     PT_RESPONSE: 'PT_RESPONSE',
     PT_HANDLE_REQUEST: 'PT_HANDLE_REQUEST',
@@ -25,7 +26,7 @@ var PortisProvider = /** @class */ (function () {
             network: opts.network || 'mainnet',
             apiKey: opts.apiKey,
         };
-        this.iframe = this.createIframe();
+        this.elements = this.createIframe();
         this.listen();
     }
     PortisProvider.prototype.sendAsync = function (payload, cb) {
@@ -64,46 +65,19 @@ var PortisProvider = /** @class */ (function () {
         var _this = this;
         return new Promise(function (resolve, reject) {
             var onload = function () {
+                var wrapper = document.createElement('div');
                 var iframe = document.createElement('iframe');
-                var iframeStyleProps = {
-                    'display': 'none',
-                    'position': 'fixed',
-                    'top': '10px',
-                    'right': '20px',
-                    'height': '525px',
-                    'width': '390px',
-                    'z-index': '2147483647',
-                    'box-shadow': '0 5px 40px rgba(0,0,0,.16)',
-                    'border-radius': '8px',
-                    'border': 'none',
-                    'animation': 'portis-entrance 250ms ease-in-out forwards',
-                    'opacity': '0',
-                };
-                var iframeMobileStyleProps = {
-                    'display': 'none',
-                    'position': 'fixed',
-                    'z-index': '2147483647',
-                    'width': '100%',
-                    'height': '100%',
-                    'top': '0',
-                    'left': '0',
-                    'right': '0',
-                    'border': 'none',
-                };
-                var style = document.createElement('style');
-                style.innerHTML = '@keyframes portis-entrance { 100% { opacity: 1; top: 20px; } }';
-                if (isMobile()) {
-                    Object.keys(iframeMobileStyleProps).forEach(function (prop) { return iframe.style[prop] = iframeMobileStyleProps[prop]; });
-                }
-                else {
-                    Object.keys(iframeStyleProps).forEach(function (prop) { return iframe.style[prop] = iframeStyleProps[prop]; });
-                }
+                var styleElem = document.createElement('style');
+                var mobile = isMobile();
+                wrapper.className = mobile ? 'mobile-wrapper' : 'wrapper';
+                iframe.className = mobile ? 'mobile-iframe' : 'iframe';
                 iframe.scrolling = 'no';
-                iframe.id = 'PT_IFRAME';
                 iframe.src = _this.portisClient + "/send/?p=" + btoa(JSON.stringify(_this.referrerAppOptions));
-                document.body.appendChild(iframe);
-                document.head.appendChild(style);
-                resolve(iframe);
+                styleElem.innerHTML = css;
+                wrapper.appendChild(iframe);
+                document.body.appendChild(wrapper);
+                document.head.appendChild(styleElem);
+                resolve({ wrapper: wrapper, iframe: iframe });
             };
             if (['loaded', 'interactive', 'complete'].indexOf(document.readyState) > -1) {
                 onload();
@@ -114,16 +88,16 @@ var PortisProvider = /** @class */ (function () {
         });
     };
     PortisProvider.prototype.showIframe = function () {
-        this.iframe.then(function (iframe) {
-            iframe.style.display = 'block';
+        this.elements.then(function (elements) {
+            elements.wrapper.style.display = 'block';
             if (isMobile()) {
                 document.body.style.overflow = 'hidden';
             }
         });
     };
     PortisProvider.prototype.hideIframe = function () {
-        this.iframe.then(function (iframe) {
-            iframe.style.display = 'none';
+        this.elements.then(function (elements) {
+            elements.wrapper.style.display = 'none';
             if (isMobile()) {
                 document.body.style.overflow = 'inherit';
             }
@@ -153,9 +127,9 @@ var PortisProvider = /** @class */ (function () {
         }
     };
     PortisProvider.prototype.sendPostMessage = function (msgType, payload) {
-        this.iframe.then(function (iframe) {
-            if (iframe.contentWindow) {
-                iframe.contentWindow.postMessage({ msgType: msgType, payload: payload }, '*');
+        this.elements.then(function (elements) {
+            if (elements.iframe.contentWindow) {
+                elements.iframe.contentWindow.postMessage({ msgType: msgType, payload: payload }, '*');
             }
         });
     };

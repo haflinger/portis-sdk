@@ -1,7 +1,8 @@
 import { Payload, Network } from "./types";
 import { isMobile } from "./utils";
+import { css } from './style';
 
-const sdkVersion = '1.2.0';
+const sdkVersion = '1.2.2';
 const postMessages = {
     PT_RESPONSE: 'PT_RESPONSE',
     PT_HANDLE_REQUEST: 'PT_HANDLE_REQUEST',
@@ -15,7 +16,7 @@ export class PortisProvider {
     portisClient = 'https://app.portis.io';
     requests: { [id: string]: { payload: Payload, cb } } = {};
     queue: { payload: Payload, cb }[] = [];
-    iframe: Promise<HTMLIFrameElement>;
+    elements: Promise<{ wrapper: HTMLDivElement, iframe: HTMLIFrameElement }>;
     authenticated = false;
     account: string | null = null;
     network: string | null = null;
@@ -32,7 +33,7 @@ export class PortisProvider {
             network: opts.network || 'mainnet',
             apiKey: opts.apiKey,
         };
-        this.iframe = this.createIframe();
+        this.elements = this.createIframe();
         this.listen();
     }
 
@@ -78,50 +79,25 @@ export class PortisProvider {
         return true;
     }
 
-    private createIframe(): Promise<HTMLIFrameElement> {
+    private createIframe(): Promise<{ wrapper: HTMLDivElement, iframe: HTMLIFrameElement }> {
         return new Promise((resolve, reject) => {
             const onload = () => {
+                const wrapper = document.createElement('div');
                 const iframe = document.createElement('iframe');
-                const iframeStyleProps = {
-                    'display': 'none',
-                    'position': 'fixed',
-                    'top': '10px',
-                    'right': '20px',
-                    'height': '525px',
-                    'width': '390px',
-                    'z-index': '2147483647',
-                    'box-shadow': '0 5px 40px rgba(0,0,0,.16)',
-                    'border-radius': '8px',
-                    'border': 'none',
-                    'animation': 'portis-entrance 250ms ease-in-out forwards',
-                    'opacity': '0',
-                };
-                const iframeMobileStyleProps = {
-                    'display': 'none',
-                    'position': 'fixed',
-                    'z-index': '2147483647',
-                    'width': '100%',
-                    'height': '100%',
-                    'top': '0',
-                    'left': '0',
-                    'right': '0',
-                    'border': 'none',
-                };
-                const style = document.createElement('style');
-                style.innerHTML = '@keyframes portis-entrance { 100% { opacity: 1; top: 20px; } }';
+                const styleElem = document.createElement('style');
+                const mobile = isMobile();
 
-                if (isMobile()) {
-                    Object.keys(iframeMobileStyleProps).forEach((prop: any) => iframe.style[prop] = (iframeMobileStyleProps as any)[prop]);
-                } else {
-                    Object.keys(iframeStyleProps).forEach((prop: any) => iframe.style[prop] = (iframeStyleProps as any)[prop]);
-                }
-
+                wrapper.className = mobile ? 'mobile-wrapper' : 'wrapper';
+                iframe.className = mobile ? 'mobile-iframe' : 'iframe';
                 iframe.scrolling = 'no';
-                iframe.id = 'PT_IFRAME';
                 iframe.src = `${this.portisClient}/send/?p=${btoa(JSON.stringify(this.referrerAppOptions))}`;
-                document.body.appendChild(iframe);
-                document.head.appendChild(style);
-                resolve(iframe);
+                styleElem.innerHTML = css;
+
+                wrapper.appendChild(iframe);
+                document.body.appendChild(wrapper);
+                document.head.appendChild(styleElem);
+
+                resolve({ wrapper, iframe });
             }
 
             if (['loaded', 'interactive', 'complete'].indexOf(document.readyState) > -1) {
@@ -133,8 +109,8 @@ export class PortisProvider {
     }
 
     private showIframe() {
-        this.iframe.then(iframe => {
-            iframe.style.display = 'block'
+        this.elements.then(elements => {
+            elements.wrapper.style.display = 'block'
 
             if (isMobile()) {
                 document.body.style.overflow = 'hidden';
@@ -143,8 +119,8 @@ export class PortisProvider {
     }
 
     private hideIframe() {
-        this.iframe.then(iframe => {
-            iframe.style.display = 'none';
+        this.elements.then(elements => {
+            elements.wrapper.style.display = 'none';
 
             if (isMobile()) {
                 document.body.style.overflow = 'inherit';
@@ -180,9 +156,9 @@ export class PortisProvider {
     }
 
     private sendPostMessage(msgType: string, payload?: Object) {
-        this.iframe.then(iframe => {
-            if (iframe.contentWindow) {
-                iframe.contentWindow.postMessage({ msgType, payload }, '*');
+        this.elements.then(elements => {
+            if (elements.iframe.contentWindow) {
+                elements.iframe.contentWindow.postMessage({ msgType, payload }, '*');
             }
         });
     }
