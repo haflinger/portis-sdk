@@ -6,7 +6,7 @@ The Portis platform provides convenient access to the Ethereum network from any 
 
 Your dApp communicates with the Portis SDK using standard [web3.js](https://github.com/ethereum/web3.js/) API calls, meaning it will work automatically with your existing web application.
 
-Users don’t have to install anything in advance to use your dApp. With Portis, your dApp already comes bundled with a solution by offering them a simple in-browser username/password login method which feels familiar.
+Users don’t have to install anything in advance to use your dApp. With Portis, your dApp already comes bundled with a solution by offering them a simple in-browser email/password login method which feels familiar.
 
 <hr>
 
@@ -14,39 +14,100 @@ Users don’t have to install anything in advance to use your dApp. With Portis,
 
 Once a user creates a wallet, it is immediately encrypted using [AES-GCM](https://en.wikipedia.org/wiki/Galois/Counter_Mode). The Portis server only stores encrypted wallets, so we can enable users to easily use the same account across different devices, all without compromising security. Every transaction is signed **client-side** by the user, meaning the Portis server only relays signed transactions (i.e it can't modify them).
 
-Our code underwent rigorous third party security audits. It is published open source because we believe that is the best way to reach a truly secure codebase. In addition, we want to involve developers as much as possible and welcome any and all comments / pull requests.
+Our code underwent rigorous third party security audits. The SDK is published open source because we believe that is the best way to reach a truly secure codebase. In addition, we want to involve developers as much as possible and welcome any and all comments / pull requests.
 
 <hr>
 
 ## Installation
 
-Add the Portis SDK to your package.json
+To begin using Portis in your dApp, the Portis SDK JavaScript code should be loaded into your dApp's code. There are several ways to carry this out:
 
-    npm install portis
+### npm
+
+The recommended method of loading Portis is by installing the `portis` npm package:
+
+```js
+$ npm install portis
+```
+
+### CDN
+You can also include the bundled portis.js file hosted on jsdelivr's CDN:
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/portis/dist/bundle.min.js"></script>
+```
+
+### Bower
+We also provide a way to deploy Portis via bower. Useful if you want serve your own scripts (instead of depending on our CDN) and maintain a `bower.json` with a list of dependencies and versions (adding the `--save` flag would automatically add it to `bower.json`).
+
+```js
+$ bower install portis --save
+```
+```html
+<script src="/bower_components/portis/dist/bundle.min.js"></script>
+```
+<hr>
+
+## Import
+
+Portis should be imported into the same part of the code where you initialize `web3`
+
+### CommonJS
+To use Portis with CommonJS imports:
+
+```js
+var PortisProvider = require('portis').PortisProvider;
+```
+
+### Typescript / ES2015 (ES6)
+To use Portis with Typescript / ES2015 imports:
+
+```js
+import { PortisProvider } from 'portis';
+```
+
+### CDN
+To use Portis from CDN:
+
+```js
+var PortisProvider = window.Portis.PortisProvider;
+```
+
+<hr>
+
+## Registration
 
 Register your dApp on the Portis platform - [https://app.portis.io/dashboard](https://app.portis.io/dashboard).
 
+In this page, you will be able to manage all of your dApps which are powered by Portis.
+
 Inside your dApp's info page you will see your API Key. You will need to provide that key when initializing Portis as your ```Web Provider```.
 
-```js
-const Portis = require('portis');
+> When running your dApp on localhost, Portis does not require the API Key.
 
-// Checking if Web3 has been injected by the browser (Mist/MetaMask)
+<hr>
+
+## Initialization
+
+Once Portis has been imported, you should set it up as your fallback ```Web3 Provider```:
+
+```js
+// Check if Web3 has been injected by the browser (Mist/MetaMask)
 if (typeof web3 !== 'undefined') {
     // Use Mist/MetaMask's provider
     web3js = new Web3(web3.currentProvider);
 } else {
     // Fallback - use Portis
-    web3js = new Web3(new Portis.PortisProvider({
-        apiKey: YOUR_DAPP_API_KEY
+    web3js = new Web3(new PortisProvider({
+        apiKey: 'YOUR_DAPP_API_KEY'
     }));
 }
 
 // Now you can start your app & access web3 freely:
-startApp()
+startApp();
 ```
 
-This will set Portis as the fallback for when Mist/MetaMask or any other pre-installed web3 providers are unavailable.
+This will set Portis as the fallback for when Mist/MetaMask or any other pre-installed web3 providers are not available.
 
 If the Portis provider was injected properly, then ```isPortis``` will return ```true```
 
@@ -57,7 +118,7 @@ web3.currentProvider.isPortis
 
 ## Configuration Options
 
-### A configuration options object should be passed along when initializing the Portis provider:
+A configuration options object should be passed along when initializing the Portis provider:
 
 ```js
 web3js = new Web3(new Portis.PortisProvider({
