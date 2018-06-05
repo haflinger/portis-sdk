@@ -2,7 +2,7 @@ import { Payload, Network } from "./types";
 import { isMobile } from "./utils";
 import { css } from './style';
 
-const sdkVersion = '1.2.2';
+const sdkVersion = '1.2.3';
 const postMessages = {
     PT_RESPONSE: 'PT_RESPONSE',
     PT_HANDLE_REQUEST: 'PT_HANDLE_REQUEST',
@@ -23,15 +23,21 @@ export class PortisProvider {
     isPortis = true;
     referrerAppOptions;
 
-    constructor(opts: { apiKey: string, network?: Network }) {
+    constructor(opts: { apiKey: string, network?: Network, infuraApiKey?: string, providerNodeUrl?: string }) {
         if (!opts.apiKey) {
             throw 'apiKey is missing. Please check your apiKey in the Portis dashboard: https://app.portis.io/dashboard';
+        }
+
+        if (opts.infuraApiKey && opts.providerNodeUrl) {
+            throw 'Invalid parameters. \'infuraApiKey\' and \'providerNodeUrl\' cannot be both provided. Refer to the Portis documentation for more info.';
         }
 
         this.referrerAppOptions = {
             sdkVersion,
             network: opts.network || 'mainnet',
             apiKey: opts.apiKey,
+            infuraApiKey: opts.infuraApiKey,
+            providerNodeUrl: opts.providerNodeUrl,
         };
         this.elements = this.createIframe();
         this.listen();

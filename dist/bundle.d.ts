@@ -24,6 +24,8 @@ export class PortisProvider {
     constructor(opts: {
         apiKey: string;
         network?: Network;
+        infuraApiKey?: string;
+        providerNodeUrl?: string;
     });
     sendAsync(payload: Payload, cb: any): void;
     send(payload: Payload): {

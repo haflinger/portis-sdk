@@ -94,13 +94,13 @@ Once Portis has been imported, you should set it up as your fallback ```Web3 Pro
 ```js
 // Check if Web3 has been injected by the browser (Mist/MetaMask)
 if (typeof web3 !== 'undefined') {
-    // Use Mist/MetaMask's provider
-    web3js = new Web3(web3.currentProvider);
+ // Use Mist/MetaMask's provider
+ web3js = new Web3(web3.currentProvider);
 } else {
-    // Fallback - use Portis
-    web3js = new Web3(new PortisProvider({
-        apiKey: 'YOUR_DAPP_API_KEY'
-    }));
+ // Fallback - use Portis
+ web3js = new Web3(new PortisProvider({
+ apiKey: 'YOUR_DAPP_API_KEY'
+ }));
 }
 
 // Now you can start your app & access web3 freely:
@@ -122,8 +122,8 @@ A configuration options object should be passed along when initializing the Port
 
 ```js
 web3js = new Web3(new Portis.PortisProvider({
-    apiKey: 'YOUR_DAPP_API_KEY',
-    network: 'ropsten'   
+ apiKey: 'YOUR_DAPP_API_KEY',
+ network: 'ropsten'
 }));
 ```
 
@@ -150,6 +150,27 @@ Determines which Ethereum network all web3 methods will communicate with. You ca
 1. rinkeby
 
 
+### ```infuraApiKey```
+
+**Type:** `String`
+
+**Default Value:** ```null```
+
+**Required**: ```false```
+
+The API Key of your Infura account. If provided, Infura will serve as the provider node for all outgoing communication with the Ethereum network.
+
+### ```providerNodeUrl```
+
+**Type:** `String`
+
+**Default Value:** ```null```
+
+**Required**: ```false```
+
+The URL of a custom provider node. If provided, that endpoint will serve as the provider node for all outgoing communication with the Ethereum network.
+
+The valid types are `HttpProvider`, `WebsocketProvider` and `IpcProvider`, as defined in the [web3js documentation](https://web3js.readthedocs.io/en/1.0/web3.html#value).
 
 <hr>
 

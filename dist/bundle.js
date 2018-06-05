@@ -13,7 +13,7 @@ function isMobile() {
 
 var css = "\n.wrapper {\n    display: none;\n    position: fixed;\n    top: 10px;\n    right: 20px;\n    height: 525px;\n    width: 390px;\n    border-radius: 8px;\n    z-index: 2147483647;\n    box-shadow: rgba(0, 0, 0, 0.16) 0px 5px 40px;\n    animation: portis-entrance 250ms ease-in-out forwards;\n    opacity: 0;\n}\n\n.iframe {\n    display: block;\n    width: 100%;\n    height: 100%;\n    border: none;\n    border-radius: 8px;\n}\n\n.mobile-wrapper {\n    display: none;\n    position: fixed;\n    top: 0;\n    left: 0;\n    right: 0;\n    width: 100%;\n    height: 100%;\n    z-index: 2147483647;\n}\n\n.mobile-iframe {\n    display: block;\n    width: 100%;\n    height: 100%;\n    border: none;\n}\n\n@keyframes portis-entrance {\n    100% { opacity: 1; top: 20px; }\n}\n";
 
-var sdkVersion = '1.2.2';
+var sdkVersion = '1.2.3';
 var postMessages = {
     PT_RESPONSE: 'PT_RESPONSE',
     PT_HANDLE_REQUEST: 'PT_HANDLE_REQUEST',
@@ -34,10 +34,15 @@ var PortisProvider = /** @class */ (function () {
         if (!opts.apiKey) {
             throw 'apiKey is missing. Please check your apiKey in the Portis dashboard: https://app.portis.io/dashboard';
         }
+        if (opts.infuraApiKey && opts.providerNodeUrl) {
+            throw 'Invalid parameters. \'infuraApiKey\' and \'providerNodeUrl\' cannot be both provided. Refer to the Portis documentation for more info.';
+        }
         this.referrerAppOptions = {
             sdkVersion: sdkVersion,
             network: opts.network || 'mainnet',
             apiKey: opts.apiKey,
+            infuraApiKey: opts.infuraApiKey,
+            providerNodeUrl: opts.providerNodeUrl,
         };
         this.elements = this.createIframe();
         this.listen();

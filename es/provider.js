@@ -1,6 +1,6 @@
 import { isMobile } from "./utils";
 import { css } from './style';
-var sdkVersion = '1.2.2';
+var sdkVersion = '1.2.3';
 var postMessages = {
     PT_RESPONSE: 'PT_RESPONSE',
     PT_HANDLE_REQUEST: 'PT_HANDLE_REQUEST',
@@ -21,10 +21,15 @@ var PortisProvider = /** @class */ (function () {
         if (!opts.apiKey) {
             throw 'apiKey is missing. Please check your apiKey in the Portis dashboard: https://app.portis.io/dashboard';
         }
+        if (opts.infuraApiKey && opts.providerNodeUrl) {
+            throw 'Invalid parameters. \'infuraApiKey\' and \'providerNodeUrl\' cannot be both provided. Refer to the Portis documentation for more info.';
+        }
         this.referrerAppOptions = {
             sdkVersion: sdkVersion,
             network: opts.network || 'mainnet',
             apiKey: opts.apiKey,
+            infuraApiKey: opts.infuraApiKey,
+            providerNodeUrl: opts.providerNodeUrl,
         };
         this.elements = this.createIframe();
         this.listen();
