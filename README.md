@@ -188,6 +188,14 @@ There you can create as many accounts as you like, they simply won't be funded w
 
 <hr>
 
+## Supported Browsers
+
+For security reasons, Portis supports "evergreen" browsers - the last versions of browsers that automatically update themselves. 
+
+This includes Safari >= 10, Chrome >= 55 (including Opera), Edge >= 13 on the desktop, and iOS 10 and Chrome on mobile.
+
+<hr>
+
 ## Community
 
 * [Gitter](https://gitter.im/portis-project/Lobby)
