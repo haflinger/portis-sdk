@@ -15,7 +15,7 @@ export declare class PortisProvider {
         wrapper: HTMLDivElement;
         iframe: HTMLIFrameElement;
     }>;
-    authenticated: boolean;
+    iframeReady: boolean;
     account: string | null;
     network: string | null;
     isPortis: boolean;

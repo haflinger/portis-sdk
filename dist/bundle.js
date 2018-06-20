@@ -13,11 +13,11 @@ function isMobile() {
 
 var css = "\n.wrapper {\n    display: none;\n    position: fixed;\n    top: 10px;\n    right: 20px;\n    height: 525px;\n    width: 390px;\n    border-radius: 8px;\n    z-index: 2147483647;\n    box-shadow: rgba(0, 0, 0, 0.16) 0px 5px 40px;\n    animation: portis-entrance 250ms ease-in-out forwards;\n    opacity: 0;\n}\n\n.iframe {\n    display: block;\n    width: 100%;\n    height: 100%;\n    border: none;\n    border-radius: 8px;\n}\n\n.mobile-wrapper {\n    display: none;\n    position: fixed;\n    top: 0;\n    left: 0;\n    right: 0;\n    width: 100%;\n    height: 100%;\n    z-index: 2147483647;\n}\n\n.mobile-iframe {\n    display: block;\n    width: 100%;\n    height: 100%;\n    border: none;\n}\n\n@keyframes portis-entrance {\n    100% { opacity: 1; top: 20px; }\n}\n";
 
-var sdkVersion = '1.2.3';
+var sdkVersion = '1.2.4';
 var postMessages = {
     PT_RESPONSE: 'PT_RESPONSE',
     PT_HANDLE_REQUEST: 'PT_HANDLE_REQUEST',
-    PT_AUTHENTICATED: 'PT_AUTHENTICATED',
+    PT_GREEN_LIGHT: 'PT_GREEN_LIGHT',
     PT_SHOW_IFRAME: 'PT_SHOW_IFRAME',
     PT_HIDE_IFRAME: 'PT_HIDE_IFRAME',
     PT_USER_DENIED: 'PT_USER_DENIED',
@@ -27,7 +27,6 @@ var PortisProvider = /** @class */ (function () {
         this.portisClient = 'https://app.portis.io';
         this.requests = {};
         this.queue = [];
-        this.authenticated = false;
         this.account = null;
         this.network = null;
         this.isPortis = true;
@@ -89,7 +88,6 @@ var PortisProvider = /** @class */ (function () {
                 var mobile = isMobile();
                 wrapper.className = mobile ? 'mobile-wrapper' : 'wrapper';
                 iframe.className = mobile ? 'mobile-iframe' : 'iframe';
-                iframe.scrolling = 'no';
                 iframe.src = _this.portisClient + "/send/?p=" + btoa(JSON.stringify(_this.referrerAppOptions));
                 styleElem.innerHTML = css;
                 wrapper.appendChild(iframe);
@@ -123,12 +121,8 @@ var PortisProvider = /** @class */ (function () {
     };
     PortisProvider.prototype.enqueue = function (payload, cb) {
         this.queue.push({ payload: payload, cb: cb });
-        if (this.authenticated) {
+        if (this.iframeReady) {
             this.dequeue();
-        }
-        else if (this.queue.length == 1) {
-            // show iframe in order to authenticate the user
-            this.showIframe();
         }
     };
     PortisProvider.prototype.dequeue = function () {
@@ -156,8 +150,8 @@ var PortisProvider = /** @class */ (function () {
         window.addEventListener('message', function (evt) {
             if (evt.origin === _this.portisClient) {
                 switch (evt.data.msgType) {
-                    case postMessages.PT_AUTHENTICATED: {
-                        _this.authenticated = true;
+                    case postMessages.PT_GREEN_LIGHT: {
+                        _this.iframeReady = true;
                         _this.dequeue();
                         break;
                     }

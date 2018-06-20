@@ -2,11 +2,11 @@ import { Payload, Network } from "./types";
 import { isMobile } from "./utils";
 import { css } from './style';
 
-const sdkVersion = '1.2.3';
+const sdkVersion = '1.2.4';
 const postMessages = {
     PT_RESPONSE: 'PT_RESPONSE',
     PT_HANDLE_REQUEST: 'PT_HANDLE_REQUEST',
-    PT_AUTHENTICATED: 'PT_AUTHENTICATED',
+    PT_GREEN_LIGHT: 'PT_GREEN_LIGHT',
     PT_SHOW_IFRAME: 'PT_SHOW_IFRAME',
     PT_HIDE_IFRAME: 'PT_HIDE_IFRAME',
     PT_USER_DENIED: 'PT_USER_DENIED',
@@ -17,7 +17,7 @@ export class PortisProvider {
     requests: { [id: string]: { payload: Payload, cb } } = {};
     queue: { payload: Payload, cb }[] = [];
     elements: Promise<{ wrapper: HTMLDivElement, iframe: HTMLIFrameElement }>;
-    authenticated = false;
+    iframeReady: boolean;
     account: string | null = null;
     network: string | null = null;
     isPortis = true;
@@ -95,7 +95,6 @@ export class PortisProvider {
 
                 wrapper.className = mobile ? 'mobile-wrapper' : 'wrapper';
                 iframe.className = mobile ? 'mobile-iframe' : 'iframe';
-                iframe.scrolling = 'no';
                 iframe.src = `${this.portisClient}/send/?p=${btoa(JSON.stringify(this.referrerAppOptions))}`;
                 styleElem.innerHTML = css;
 
@@ -137,11 +136,8 @@ export class PortisProvider {
     private enqueue(payload: Payload, cb) {
         this.queue.push({ payload, cb });
 
-        if (this.authenticated) {
+        if (this.iframeReady) {
             this.dequeue();
-        } else if (this.queue.length == 1) {
-            // show iframe in order to authenticate the user
-            this.showIframe();
         }
     }
 
@@ -174,8 +170,8 @@ export class PortisProvider {
             if (evt.origin === this.portisClient) {
                 switch (evt.data.msgType) {
 
-                    case postMessages.PT_AUTHENTICATED: {
-                        this.authenticated = true;
+                    case postMessages.PT_GREEN_LIGHT: {
+                        this.iframeReady = true;
                         this.dequeue();
                         break;
                     }
