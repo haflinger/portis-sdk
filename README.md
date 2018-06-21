@@ -1,5 +1,13 @@
 # [Portis](https://portis.io)
 
+
+
+[![license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/portis-project/portis-sdk/blob/master/LICENSE.txt)
+[![npm](https://img.shields.io/npm/v/portis.svg)](https://www.npmjs.com/package/portis)
+[![Gitter](https://img.shields.io/gitter/room/nwjs/nw.js.svg?colorB=0E7FC0)](https://gitter.im/portis-project/Lobby)
+[![Twitter](https://img.shields.io/badge/twitter-portis-blue.svg?style=flat)](https://twitter.com/portis_io)
+
+
 The Portis platform provides convenient access to the Ethereum network from any web application.
 
 ## How does it work?
@@ -15,6 +23,8 @@ Users don’t have to install anything in advance to use your dApp. With Portis,
 Once a user creates a wallet, it is immediately encrypted using [AES-GCM](https://en.wikipedia.org/wiki/Galois/Counter_Mode). The Portis server only stores encrypted wallets, so we can enable users to easily use the same account across different devices, all without compromising security. Every transaction is signed **client-side** by the user, meaning the Portis server only relays signed transactions (i.e it can't modify them).
 
 Our code underwent rigorous third party security audits. The SDK is published open source because we believe that is the best way to reach a truly secure codebase. In addition, we want to involve developers as much as possible and welcome any and all comments / pull requests.
+
+For security reasons, **dApps using Portis must run over HTTPS**.
 
 <hr>
 
