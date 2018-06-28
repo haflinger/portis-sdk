@@ -93,6 +93,8 @@ In this page, you will be able to manage all of your dApps which are powered by 
 
 Inside your dApp's info page you will see your API Key. You will need to provide that key when initializing Portis as your ```Web Provider```.
 
+The API Key is not secret (as it is being sent from the client), its goal is to verify that the dApp using Portis has been registered and is approved.
+
 > When running your dApp on localhost, Portis does not require the API Key.
 
 <hr>
