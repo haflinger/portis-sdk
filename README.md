@@ -146,7 +146,9 @@ web3js = new Web3(new Portis.PortisProvider({
 
 **Required**: ```true```
 
-The API Key of your dApp, provided in the Portis dashboard.
+The API Key of your dApp, provided in the Portis dashboard after registering your dApp. 
+
+When running your dApp on localhost, Portis does not require the API Key.
 
 ### ```network```
 **Type:** `String`
