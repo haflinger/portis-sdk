@@ -1,6 +1,6 @@
 import { isMobile, isLocalhost } from "./utils";
 import { css } from './style';
-var sdkVersion = '1.2.4';
+var sdkVersion = '1.2.5';
 var postMessages = {
     PT_RESPONSE: 'PT_RESPONSE',
     PT_HANDLE_REQUEST: 'PT_HANDLE_REQUEST',
