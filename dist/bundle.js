@@ -10,6 +10,9 @@ function isMobile() {
         check = true; })(navigator.userAgent || navigator.vendor || window.opera);
     return check;
 }
+function isLocalhost() {
+    return location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+}
 
 var css = "\n.wrapper {\n    display: none;\n    position: fixed;\n    top: 10px;\n    right: 20px;\n    height: 525px;\n    width: 390px;\n    border-radius: 8px;\n    z-index: 2147483647;\n    box-shadow: rgba(0, 0, 0, 0.16) 0px 5px 40px;\n    animation: portis-entrance 250ms ease-in-out forwards;\n    opacity: 0;\n}\n\n.iframe {\n    display: block;\n    width: 100%;\n    height: 100%;\n    border: none;\n    border-radius: 8px;\n}\n\n.mobile-wrapper {\n    display: none;\n    position: fixed;\n    top: 0;\n    left: 0;\n    right: 0;\n    width: 100%;\n    height: 100%;\n    z-index: 2147483647;\n}\n\n.mobile-iframe {\n    display: block;\n    width: 100%;\n    height: 100%;\n    border: none;\n}\n\n@keyframes portis-entrance {\n    100% { opacity: 1; top: 20px; }\n}\n";
 
@@ -30,7 +33,7 @@ var PortisProvider = /** @class */ (function () {
         this.account = null;
         this.network = null;
         this.isPortis = true;
-        if (!opts.apiKey) {
+        if (!isLocalhost() && !opts.apiKey) {
             throw 'apiKey is missing. Please check your apiKey in the Portis dashboard: https://app.portis.io/dashboard';
         }
         if (opts.infuraApiKey && opts.providerNodeUrl) {

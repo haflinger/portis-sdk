@@ -1,4 +1,4 @@
-import { isMobile } from "./utils";
+import { isMobile, isLocalhost } from "./utils";
 import { css } from './style';
 var sdkVersion = '1.2.4';
 var postMessages = {
@@ -17,7 +17,7 @@ var PortisProvider = /** @class */ (function () {
         this.account = null;
         this.network = null;
         this.isPortis = true;
-        if (!opts.apiKey) {
+        if (!isLocalhost() && !opts.apiKey) {
             throw 'apiKey is missing. Please check your apiKey in the Portis dashboard: https://app.portis.io/dashboard';
         }
         if (opts.infuraApiKey && opts.providerNodeUrl) {

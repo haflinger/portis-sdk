@@ -1,5 +1,5 @@
 import { Payload, Network } from "./types";
-import { isMobile } from "./utils";
+import { isMobile, isLocalhost } from "./utils";
 import { css } from './style';
 
 const sdkVersion = '1.2.4';
@@ -24,7 +24,7 @@ export class PortisProvider {
     referrerAppOptions;
 
     constructor(opts: { apiKey: string, network?: Network, infuraApiKey?: string, providerNodeUrl?: string }) {
-        if (!opts.apiKey) {
+        if (!isLocalhost() && !opts.apiKey) {
             throw 'apiKey is missing. Please check your apiKey in the Portis dashboard: https://app.portis.io/dashboard';
         }
 

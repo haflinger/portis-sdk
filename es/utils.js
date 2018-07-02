@@ -4,4 +4,7 @@ export function isMobile() {
         check = true; })(navigator.userAgent || navigator.vendor || window.opera);
     return check;
 }
+export function isLocalhost() {
+    return location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+}
 //# sourceMappingURL=utils.js.map
