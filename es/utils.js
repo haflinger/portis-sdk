@@ -7,4 +7,9 @@ export function isMobile() {
 export function isLocalhost() {
     return location.hostname === 'localhost' || location.hostname === '127.0.0.1';
 }
+export function randomId() {
+    var upperBound = Math.pow(10, 7);
+    var lowerBound = 1;
+    return Math.floor(Math.random() * (upperBound - lowerBound) + lowerBound);
+}
 //# sourceMappingURL=utils.js.map

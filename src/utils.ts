@@ -11,3 +11,9 @@ export function isMobile() {
 export function isLocalhost() {
     return location.hostname === 'localhost' || location.hostname === '127.0.0.1';
 }
+
+export function randomId() {
+    const upperBound = Math.pow(10, 7);
+    const lowerBound = 1;
+    return Math.floor(Math.random() * (upperBound - lowerBound) + lowerBound);
+}

@@ -33,6 +33,7 @@ export declare class PortisProvider {
         result: any;
     };
     isConnected(): boolean;
+    setDefaultEmail(email: string): void;
     private createIframe();
     private showIframe();
     private hideIframe();

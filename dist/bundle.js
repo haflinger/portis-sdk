@@ -13,10 +13,15 @@ function isMobile() {
 function isLocalhost() {
     return location.hostname === 'localhost' || location.hostname === '127.0.0.1';
 }
+function randomId() {
+    var upperBound = Math.pow(10, 7);
+    var lowerBound = 1;
+    return Math.floor(Math.random() * (upperBound - lowerBound) + lowerBound);
+}
 
 var css = "\n.wrapper {\n    display: none;\n    position: fixed;\n    top: 10px;\n    right: 20px;\n    height: 525px;\n    width: 390px;\n    border-radius: 8px;\n    z-index: 2147483647;\n    box-shadow: rgba(0, 0, 0, 0.16) 0px 5px 40px;\n    animation: portis-entrance 250ms ease-in-out forwards;\n    opacity: 0;\n}\n\n.iframe {\n    display: block;\n    width: 100%;\n    height: 100%;\n    border: none;\n    border-radius: 8px;\n}\n\n.mobile-wrapper {\n    display: none;\n    position: fixed;\n    top: 0;\n    left: 0;\n    right: 0;\n    width: 100%;\n    height: 100%;\n    z-index: 2147483647;\n}\n\n.mobile-iframe {\n    display: block;\n    width: 100%;\n    height: 100%;\n    border: none;\n}\n\n@keyframes portis-entrance {\n    100% { opacity: 1; top: 20px; }\n}\n";
 
-var sdkVersion = '1.2.5';
+var sdkVersion = '1.2.6';
 var postMessages = {
     PT_RESPONSE: 'PT_RESPONSE',
     PT_HANDLE_REQUEST: 'PT_HANDLE_REQUEST',
@@ -24,6 +29,9 @@ var postMessages = {
     PT_SHOW_IFRAME: 'PT_SHOW_IFRAME',
     PT_HIDE_IFRAME: 'PT_HIDE_IFRAME',
     PT_USER_DENIED: 'PT_USER_DENIED',
+};
+var portisPayloadMethods = {
+    SET_DEFAULT_EMAIL: 'set_default_email',
 };
 var PortisProvider = /** @class */ (function () {
     function PortisProvider(opts) {
@@ -80,6 +88,15 @@ var PortisProvider = /** @class */ (function () {
     };
     PortisProvider.prototype.isConnected = function () {
         return true;
+    };
+    PortisProvider.prototype.setDefaultEmail = function (email) {
+        var payload = {
+            id: randomId(),
+            jsonrpc: '2.0',
+            method: portisPayloadMethods.SET_DEFAULT_EMAIL,
+            params: [email],
+        };
+        this.enqueue(payload, function (_) { return _; });
     };
     PortisProvider.prototype.createIframe = function () {
         var _this = this;

@@ -146,7 +146,7 @@ web3js = new Web3(new Portis.PortisProvider({
 
 **Required**: ```true```
 
-The API Key of your dApp, provided in the Portis dashboard after registering your dApp. 
+The API Key of your dApp, provided in the Portis dashboard after registering your dApp.
 
 When running your dApp on localhost, Portis does not require the API Key.
 
@@ -188,6 +188,19 @@ The valid types are `HttpProvider`, `WebsocketProvider` and `IpcProvider`, as de
 
 <hr>
 
+## Methods
+
+### ```setDefaultEmail```
+
+If you already know the user's email address, you can use this method to pre-populate the email field in the login and register pages.
+
+**Example**:
+```js
+web3.currentProvider.setDefaultEmail('satoshi@portis.io');
+```
+
+<hr>
+
 ## Account Creation
 
 Each new account is automatically loaded with $1 worth of Ether, free of charge. Our goal is to provide the best user experience to your users, so we want to make sure that the first time they sign a transaction goes as smooth as possible.
@@ -204,7 +217,7 @@ There you can create as many accounts as you like, they simply won't be funded w
 
 ## Supported Browsers
 
-For security reasons, Portis supports "evergreen" browsers - the last versions of browsers that automatically update themselves. 
+For security reasons, Portis supports "evergreen" browsers - the last versions of browsers that automatically update themselves.
 
 This includes Safari >= 10, Chrome >= 55 (including Opera), Edge >= 13 on the desktop, and iOS 10 and Chrome on mobile.
 

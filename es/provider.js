@@ -1,6 +1,6 @@
-import { isMobile, isLocalhost } from "./utils";
+import { isMobile, isLocalhost, randomId } from "./utils";
 import { css } from './style';
-var sdkVersion = '1.2.5';
+var sdkVersion = '1.2.6';
 var postMessages = {
     PT_RESPONSE: 'PT_RESPONSE',
     PT_HANDLE_REQUEST: 'PT_HANDLE_REQUEST',
@@ -8,6 +8,9 @@ var postMessages = {
     PT_SHOW_IFRAME: 'PT_SHOW_IFRAME',
     PT_HIDE_IFRAME: 'PT_HIDE_IFRAME',
     PT_USER_DENIED: 'PT_USER_DENIED',
+};
+var portisPayloadMethods = {
+    SET_DEFAULT_EMAIL: 'set_default_email',
 };
 var PortisProvider = /** @class */ (function () {
     function PortisProvider(opts) {
@@ -64,6 +67,15 @@ var PortisProvider = /** @class */ (function () {
     };
     PortisProvider.prototype.isConnected = function () {
         return true;
+    };
+    PortisProvider.prototype.setDefaultEmail = function (email) {
+        var payload = {
+            id: randomId(),
+            jsonrpc: '2.0',
+            method: portisPayloadMethods.SET_DEFAULT_EMAIL,
+            params: [email],
+        };
+        this.enqueue(payload, function (_) { return _; });
     };
     PortisProvider.prototype.createIframe = function () {
         var _this = this;

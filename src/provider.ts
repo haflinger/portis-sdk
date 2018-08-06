@@ -1,8 +1,8 @@
 import { Payload, Network } from "./types";
-import { isMobile, isLocalhost } from "./utils";
+import { isMobile, isLocalhost, randomId } from "./utils";
 import { css } from './style';
 
-const sdkVersion = '1.2.5';
+const sdkVersion = '1.2.6';
 const postMessages = {
     PT_RESPONSE: 'PT_RESPONSE',
     PT_HANDLE_REQUEST: 'PT_HANDLE_REQUEST',
@@ -10,7 +10,10 @@ const postMessages = {
     PT_SHOW_IFRAME: 'PT_SHOW_IFRAME',
     PT_HIDE_IFRAME: 'PT_HIDE_IFRAME',
     PT_USER_DENIED: 'PT_USER_DENIED',
-}
+};
+const portisPayloadMethods = {
+    SET_DEFAULT_EMAIL: 'set_default_email',
+};
 
 export class PortisProvider {
     portisClient = 'https://app.portis.io';
@@ -83,6 +86,16 @@ export class PortisProvider {
 
     isConnected() {
         return true;
+    }
+
+    setDefaultEmail(email: string) {
+        const payload = {
+            id: randomId(),
+            jsonrpc: '2.0',
+            method: portisPayloadMethods.SET_DEFAULT_EMAIL,
+            params: [email],
+        };
+        this.enqueue(payload, _ => _);
     }
 
     private createIframe(): Promise<{ wrapper: HTMLDivElement, iframe: HTMLIFrameElement }> {
