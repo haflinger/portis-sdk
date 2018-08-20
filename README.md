@@ -8,11 +8,11 @@
 [![Twitter](https://img.shields.io/badge/twitter-portis-blue.svg?style=flat)](https://twitter.com/portis_io)
 
 
-The Portis platform provides convenient access to the Ethereum network from any web application.
+The Portis platform provides convenient access to the [Ethereum network](https://ethereum.org/) from any web application.
 
 ## How does it work?
 
-Your dApp communicates with the Portis SDK using standard [web3.js](https://github.com/ethereum/web3.js/) API calls, meaning it will work automatically with your existing web application.
+Your dApp (decentralized application) communicates with the Portis SDK using standard [web3.js](https://github.com/ethereum/web3.js/) API calls, meaning it will work automatically with your existing web application.
 
 Users don’t have to install anything in advance to use your dApp. With Portis, your dApp already comes bundled with a solution by offering them a simple in-browser email/password login method which feels familiar.
 
