@@ -4,4 +4,4 @@ export interface Payload {
     method: string;
     params: any[];
 }
-export declare type Network = 'mainnet' | 'ropsten' | 'kovan' | 'rinkeby';
+export declare type Network = 'mainnet' | 'ropsten' | 'kovan' | 'rinkeby' | 'core' | 'sokol';

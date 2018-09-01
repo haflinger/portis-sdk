@@ -43,5 +43,5 @@ export interface Payload {
     method: string;
     params: any[];
 }
-export type Network = 'mainnet' | 'ropsten' | 'kovan' | 'rinkeby';
+export type Network = 'mainnet' | 'ropsten' | 'kovan' | 'rinkeby' | 'core' | 'sokol';
 
