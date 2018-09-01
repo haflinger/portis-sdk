@@ -5,4 +5,4 @@ export interface Payload {
     params: any[];
 }
 
-export type Network = 'mainnet' | 'ropsten' | 'kovan' | 'rinkeby';
+export type Network = 'mainnet' | 'ropsten' | 'kovan' | 'rinkeby' | 'core' | 'sokol';

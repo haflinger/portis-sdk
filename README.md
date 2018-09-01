@@ -161,6 +161,8 @@ Determines which Ethereum network all web3 methods will communicate with. You ca
 1. ropsten
 1. kovan
 1. rinkeby
+1. sokol (POA Network)
+1. core (POA Network)
 
 
 ### ```infuraApiKey```
@@ -185,6 +187,13 @@ The URL of a custom provider node. If provided, that endpoint will serve as the 
 
 The valid types are `HttpProvider`, `WebsocketProvider` and `IpcProvider`, as defined in the [web3js documentation](https://web3js.readthedocs.io/en/1.0/web3.html#value).
 
+**Example:** 
+
+```HttpProvider```:
+```js
+providerNodeUrl: 'http://localhost:8545' 
+```
+
 <hr>
 
 ## Methods
@@ -206,11 +215,10 @@ Each new account is automatically loaded with $1 worth of Ether, free of charge.
 
 To prevent people from abusing this mechanism, we require a phone number when creating an account (a PIN is sent via SMS to that number to complete registration).
 
-We realize this poses an issue when testing, where you may want to easily generate a lot of different accounts. To overcome this issue, we created the following page:
+We realize that some users might feel uncomfortable about providing their phone number. Also, this requirement poses an issue when testing, where you may want to easily generate a lot of different accounts.
 
-https://app.portis.io/test-user
+Therefore, it is not mandatory to provide a phone number at the final step of registration. The new account simply won't be funded with the $1 worth of Ether.
 
-There you can create as many accounts as you like, they simply won't be funded with the $1 (so there's no need for SMS validation).
 
 <hr>
 
