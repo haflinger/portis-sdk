@@ -2,7 +2,7 @@ import { Payload, Network } from "./types";
 import { isMobile, isLocalhost, randomId } from "./utils";
 import { css } from './style';
 
-const sdkVersion = '1.2.7';
+const sdkVersion = '1.2.8';
 const postMessages = {
     PT_RESPONSE: 'PT_RESPONSE',
     PT_HANDLE_REQUEST: 'PT_HANDLE_REQUEST',
@@ -12,7 +12,8 @@ const postMessages = {
     PT_USER_DENIED: 'PT_USER_DENIED',
 };
 const portisPayloadMethods = {
-    SET_DEFAULT_EMAIL: 'set_default_email',
+    SET_DEFAULT_EMAIL: 'SET_DEFAULT_EMAIL',
+    SHOW_PORTIS: 'SHOW_PORTIS',
 };
 
 export class PortisProvider {
@@ -89,13 +90,21 @@ export class PortisProvider {
     }
 
     setDefaultEmail(email: string) {
+        this.sendGenericPayload(portisPayloadMethods.SET_DEFAULT_EMAIL, [email]);
+    }
+
+    showPortis(callback) {
+        this.sendGenericPayload(portisPayloadMethods.SHOW_PORTIS, [], callback);
+    }
+
+    private sendGenericPayload(method: string, params: any[] = [], callback = _ => _) {
         const payload = {
             id: randomId(),
             jsonrpc: '2.0',
-            method: portisPayloadMethods.SET_DEFAULT_EMAIL,
-            params: [email],
+            method,
+            params,
         };
-        this.enqueue(payload, _ => _);
+        this.enqueue(payload, callback);
     }
 
     private createIframe(): Promise<{ wrapper: HTMLDivElement, iframe: HTMLIFrameElement }> {

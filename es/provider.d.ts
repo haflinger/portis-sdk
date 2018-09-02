@@ -34,6 +34,8 @@ export declare class PortisProvider {
     };
     isConnected(): boolean;
     setDefaultEmail(email: string): void;
+    showPortis(callback: any): void;
+    private sendGenericPayload(method, params?, callback?);
     private createIframe();
     private showIframe();
     private hideIframe();

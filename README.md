@@ -187,24 +187,35 @@ The URL of a custom provider node. If provided, that endpoint will serve as the 
 
 The valid types are `HttpProvider`, `WebsocketProvider` and `IpcProvider`, as defined in the [web3js documentation](https://web3js.readthedocs.io/en/1.0/web3.html#value).
 
-**Example:** 
+**Example:**
 
 ```HttpProvider```:
 ```js
-providerNodeUrl: 'http://localhost:8545' 
+providerNodeUrl: 'http://localhost:8545'
 ```
 
 <hr>
 
 ## Methods
 
-### ```setDefaultEmail```
+### ```setDefaultEmail(email: string)```
 
 If you already know the user's email address, you can use this method to pre-populate the email field in the login and register pages.
 
 **Example**:
 ```js
 web3.currentProvider.setDefaultEmail('satoshi@portis.io');
+```
+
+### ```showPortis(callback: function)```
+
+You may want to show a user their Portis account without necessarily having them carry out an action (e.g. signTransaction). Calling this method will open the Portis window. The provided callback function will be called once the window has been closed explicitly by the user.
+
+**Example**:
+```js
+web3.currentProvider.showPortis(() => {
+    console.log('Portis window was closed by the user');
+}));
 ```
 
 <hr>

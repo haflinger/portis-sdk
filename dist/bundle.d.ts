@@ -35,6 +35,7 @@ export class PortisProvider {
     };
     isConnected(): boolean;
     setDefaultEmail(email: string): void;
+    showPortis(callback: any): void;
 }
 
 export interface Payload {
