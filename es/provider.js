@@ -1,6 +1,6 @@
 import { isMobile, isLocalhost, randomId } from "./utils";
 import { css } from './style';
-var sdkVersion = '1.2.8';
+var sdkVersion = '1.2.9';
 var postMessages = {
     PT_RESPONSE: 'PT_RESPONSE',
     PT_HANDLE_REQUEST: 'PT_HANDLE_REQUEST',
@@ -8,6 +8,7 @@ var postMessages = {
     PT_SHOW_IFRAME: 'PT_SHOW_IFRAME',
     PT_HIDE_IFRAME: 'PT_HIDE_IFRAME',
     PT_USER_DENIED: 'PT_USER_DENIED',
+    PT_USER_LOGGED_IN: 'PT_USER_LOGGED_IN',
 };
 var portisPayloadMethods = {
     SET_DEFAULT_EMAIL: 'SET_DEFAULT_EMAIL',
@@ -21,6 +22,7 @@ var PortisProvider = /** @class */ (function () {
         this.account = null;
         this.network = null;
         this.isPortis = true;
+        this.events = [];
         if (!isLocalhost() && !opts.apiKey) {
             throw 'apiKey is missing. Please check your apiKey in the Portis dashboard: https://app.portis.io/dashboard';
         }
@@ -74,6 +76,9 @@ var PortisProvider = /** @class */ (function () {
     };
     PortisProvider.prototype.showPortis = function (callback) {
         this.sendGenericPayload(portisPayloadMethods.SHOW_PORTIS, [], callback);
+    };
+    PortisProvider.prototype.on = function (eventName, callback) {
+        this.events.push({ eventName: eventName, callback: callback });
     };
     PortisProvider.prototype.sendGenericPayload = function (method, params, callback) {
         if (params === void 0) { params = []; }
@@ -192,6 +197,15 @@ var PortisProvider = /** @class */ (function () {
                             _this.queue.forEach(function (item) { return item.cb(new Error('User denied transaction signature.')); });
                         }
                         _this.dequeue();
+                        break;
+                    }
+                    case postMessages.PT_USER_LOGGED_IN: {
+                        _this.events
+                            .filter(function (event) { return event.eventName == 'login'; })
+                            .forEach(function (event) { return event.callback({
+                            provider: 'portis',
+                            address: evt.data.response.address,
+                        }); });
                         break;
                     }
                 }

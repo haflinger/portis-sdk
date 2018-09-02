@@ -2,7 +2,7 @@ import { Payload, Network } from "./types";
 import { isMobile, isLocalhost, randomId } from "./utils";
 import { css } from './style';
 
-const sdkVersion = '1.2.8';
+const sdkVersion = '1.2.9';
 const postMessages = {
     PT_RESPONSE: 'PT_RESPONSE',
     PT_HANDLE_REQUEST: 'PT_HANDLE_REQUEST',
@@ -10,6 +10,7 @@ const postMessages = {
     PT_SHOW_IFRAME: 'PT_SHOW_IFRAME',
     PT_HIDE_IFRAME: 'PT_HIDE_IFRAME',
     PT_USER_DENIED: 'PT_USER_DENIED',
+    PT_USER_LOGGED_IN: 'PT_USER_LOGGED_IN',
 };
 const portisPayloadMethods = {
     SET_DEFAULT_EMAIL: 'SET_DEFAULT_EMAIL',
@@ -26,6 +27,7 @@ export class PortisProvider {
     network: string | null = null;
     isPortis = true;
     referrerAppOptions;
+    events: { eventName: string, callback }[] = [];
 
     constructor(opts: { apiKey: string, network?: Network, infuraApiKey?: string, providerNodeUrl?: string }) {
         if (!isLocalhost() && !opts.apiKey) {
@@ -95,6 +97,10 @@ export class PortisProvider {
 
     showPortis(callback) {
         this.sendGenericPayload(portisPayloadMethods.SHOW_PORTIS, [], callback);
+    }
+
+    on(eventName: string, callback) {
+        this.events.push({ eventName, callback });
     }
 
     private sendGenericPayload(method: string, params: any[] = [], callback = _ => _) {
@@ -234,6 +240,16 @@ export class PortisProvider {
                         }
 
                         this.dequeue();
+                        break;
+                    }
+
+                    case postMessages.PT_USER_LOGGED_IN: {
+                        this.events
+                            .filter(event => event.eventName == 'login')
+                            .forEach(event => event.callback({
+                                provider: 'portis',
+                                address: evt.data.response.address,
+                            }));
                         break;
                     }
                 }

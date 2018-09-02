@@ -20,6 +20,10 @@ export declare class PortisProvider {
     network: string | null;
     isPortis: boolean;
     referrerAppOptions: any;
+    events: {
+        eventName: string;
+        callback;
+    }[];
     constructor(opts: {
         apiKey: string;
         network?: Network;
@@ -35,6 +39,7 @@ export declare class PortisProvider {
     isConnected(): boolean;
     setDefaultEmail(email: string): void;
     showPortis(callback: any): void;
+    on(eventName: string, callback: any): void;
     private sendGenericPayload(method, params?, callback?);
     private createIframe();
     private showIframe();
