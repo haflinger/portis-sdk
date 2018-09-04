@@ -2,7 +2,7 @@ import { Payload, Network } from "./types";
 import { isMobile, isLocalhost, randomId } from "./utils";
 import { css } from './style';
 
-const sdkVersion = '1.2.9';
+const sdkVersion = '1.2.10';
 const postMessages = {
     PT_RESPONSE: 'PT_RESPONSE',
     PT_HANDLE_REQUEST: 'PT_HANDLE_REQUEST',
@@ -28,6 +28,8 @@ export class PortisProvider {
     isPortis = true;
     referrerAppOptions;
     events: { eventName: string, callback }[] = [];
+    portisViewportMetaTag;
+    dappViewportMetaTag;
 
     constructor(opts: { apiKey: string, network?: Network, infuraApiKey?: string, providerNodeUrl?: string }) {
         if (!isLocalhost() && !opts.apiKey) {
@@ -116,19 +118,24 @@ export class PortisProvider {
     private createIframe(): Promise<{ wrapper: HTMLDivElement, iframe: HTMLIFrameElement }> {
         return new Promise((resolve, reject) => {
             const onload = () => {
+                const mobile = isMobile();
                 const wrapper = document.createElement('div');
                 const iframe = document.createElement('iframe');
                 const styleElem = document.createElement('style');
-                const mobile = isMobile();
+                const viewportMetaTag = document.createElement('meta');
 
                 wrapper.className = mobile ? 'mobile-wrapper' : 'wrapper';
                 iframe.className = mobile ? 'mobile-iframe' : 'iframe';
                 iframe.src = `${this.portisClient}/send/?p=${btoa(JSON.stringify(this.referrerAppOptions))}`;
                 styleElem.innerHTML = css;
+                viewportMetaTag.name = 'viewport';
+                viewportMetaTag.content = 'width=device-width, initial-scale=1';
 
                 wrapper.appendChild(iframe);
                 document.body.appendChild(wrapper);
                 document.head.appendChild(styleElem);
+                this.portisViewportMetaTag = viewportMetaTag;
+                this.dappViewportMetaTag = this.getDappViewportMetaTag();
 
                 resolve({ wrapper, iframe });
             }
@@ -143,10 +150,11 @@ export class PortisProvider {
 
     private showIframe() {
         this.elements.then(elements => {
-            elements.wrapper.style.display = 'block'
+            elements.wrapper.style.display = 'block';
 
             if (isMobile()) {
                 document.body.style.overflow = 'hidden';
+                this.setPortisViewport();
             }
         });
     }
@@ -157,8 +165,32 @@ export class PortisProvider {
 
             if (isMobile()) {
                 document.body.style.overflow = 'inherit';
+                this.setDappViewport();
             }
         });
+    }
+
+    private getDappViewportMetaTag() {
+        const metaTags = document.head.querySelectorAll('meta[name=viewport]');
+        return metaTags.length ? metaTags[metaTags.length - 1] : null;
+    }
+
+    private setPortisViewport() {
+        document.head.appendChild(this.portisViewportMetaTag);
+
+        if (this.dappViewportMetaTag) {
+            this.dappViewportMetaTag.remove();
+        }
+    }
+
+    private setDappViewport() {
+        if (this.portisViewportMetaTag) {
+            this.portisViewportMetaTag.remove();
+        }
+
+        if (this.dappViewportMetaTag) {
+            document.head.appendChild(this.dappViewportMetaTag);
+        }
     }
 
     private enqueue(payload: Payload, cb) {

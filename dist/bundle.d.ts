@@ -25,6 +25,8 @@ export class PortisProvider {
         eventName: string;
         callback;
     }[];
+    portisViewportMetaTag: any;
+    dappViewportMetaTag: any;
     constructor(opts: {
         apiKey: string;
         network?: Network;

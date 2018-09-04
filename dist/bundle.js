@@ -21,7 +21,7 @@ function randomId() {
 
 var css = "\n.wrapper {\n    display: none;\n    position: fixed;\n    top: 10px;\n    right: 20px;\n    height: 525px;\n    width: 390px;\n    border-radius: 8px;\n    z-index: 2147483647;\n    box-shadow: rgba(0, 0, 0, 0.16) 0px 5px 40px;\n    animation: portis-entrance 250ms ease-in-out forwards;\n    opacity: 0;\n}\n\n.iframe {\n    display: block;\n    width: 100%;\n    height: 100%;\n    border: none;\n    border-radius: 8px;\n}\n\n.mobile-wrapper {\n    display: none;\n    position: fixed;\n    top: 0;\n    left: 0;\n    right: 0;\n    width: 100%;\n    height: 100%;\n    z-index: 2147483647;\n}\n\n.mobile-iframe {\n    display: block;\n    width: 100%;\n    height: 100%;\n    border: none;\n}\n\n@keyframes portis-entrance {\n    100% { opacity: 1; top: 20px; }\n}\n";
 
-var sdkVersion = '1.2.9';
+var sdkVersion = '1.2.10';
 var postMessages = {
     PT_RESPONSE: 'PT_RESPONSE',
     PT_HANDLE_REQUEST: 'PT_HANDLE_REQUEST',
@@ -116,17 +116,22 @@ var PortisProvider = /** @class */ (function () {
         var _this = this;
         return new Promise(function (resolve, reject) {
             var onload = function () {
+                var mobile = isMobile();
                 var wrapper = document.createElement('div');
                 var iframe = document.createElement('iframe');
                 var styleElem = document.createElement('style');
-                var mobile = isMobile();
+                var viewportMetaTag = document.createElement('meta');
                 wrapper.className = mobile ? 'mobile-wrapper' : 'wrapper';
                 iframe.className = mobile ? 'mobile-iframe' : 'iframe';
                 iframe.src = _this.portisClient + "/send/?p=" + btoa(JSON.stringify(_this.referrerAppOptions));
                 styleElem.innerHTML = css;
+                viewportMetaTag.name = 'viewport';
+                viewportMetaTag.content = 'width=device-width, initial-scale=1';
                 wrapper.appendChild(iframe);
                 document.body.appendChild(wrapper);
                 document.head.appendChild(styleElem);
+                _this.portisViewportMetaTag = viewportMetaTag;
+                _this.dappViewportMetaTag = _this.getDappViewportMetaTag();
                 resolve({ wrapper: wrapper, iframe: iframe });
             };
             if (['loaded', 'interactive', 'complete'].indexOf(document.readyState) > -1) {
@@ -138,20 +143,42 @@ var PortisProvider = /** @class */ (function () {
         });
     };
     PortisProvider.prototype.showIframe = function () {
+        var _this = this;
         this.elements.then(function (elements) {
             elements.wrapper.style.display = 'block';
             if (isMobile()) {
                 document.body.style.overflow = 'hidden';
+                _this.setPortisViewport();
             }
         });
     };
     PortisProvider.prototype.hideIframe = function () {
+        var _this = this;
         this.elements.then(function (elements) {
             elements.wrapper.style.display = 'none';
             if (isMobile()) {
                 document.body.style.overflow = 'inherit';
+                _this.setDappViewport();
             }
         });
+    };
+    PortisProvider.prototype.getDappViewportMetaTag = function () {
+        var metaTags = document.head.querySelectorAll('meta[name=viewport]');
+        return metaTags.length ? metaTags[metaTags.length - 1] : null;
+    };
+    PortisProvider.prototype.setPortisViewport = function () {
+        document.head.appendChild(this.portisViewportMetaTag);
+        if (this.dappViewportMetaTag) {
+            this.dappViewportMetaTag.remove();
+        }
+    };
+    PortisProvider.prototype.setDappViewport = function () {
+        if (this.portisViewportMetaTag) {
+            this.portisViewportMetaTag.remove();
+        }
+        if (this.dappViewportMetaTag) {
+            document.head.appendChild(this.dappViewportMetaTag);
+        }
     };
     PortisProvider.prototype.enqueue = function (payload, cb) {
         this.queue.push({ payload: payload, cb: cb });

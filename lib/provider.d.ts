@@ -24,6 +24,8 @@ export declare class PortisProvider {
         eventName: string;
         callback;
     }[];
+    portisViewportMetaTag: any;
+    dappViewportMetaTag: any;
     constructor(opts: {
         apiKey: string;
         network?: Network;
@@ -44,6 +46,9 @@ export declare class PortisProvider {
     private createIframe();
     private showIframe();
     private hideIframe();
+    private getDappViewportMetaTag();
+    private setPortisViewport();
+    private setDappViewport();
     private enqueue(payload, cb);
     private dequeue();
     private sendPostMessage(msgType, payload?);
