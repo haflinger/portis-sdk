@@ -34,11 +34,11 @@ export class PortisProvider {
         providerNodeUrl?: string;
     });
     sendAsync(payload: Payload, cb: any): void;
-    send(payload: Payload): {
+    send(payload: Payload, cb?: any): {
         id: number;
         jsonrpc: string;
         result: any;
-    };
+    } | undefined;
     isConnected(): boolean;
     setDefaultEmail(email: string): void;
     showPortis(callback: any): void;

@@ -1,6 +1,6 @@
 import { isMobile, isLocalhost, randomId } from "./utils";
 import { css } from './style';
-var sdkVersion = '1.2.10';
+var sdkVersion = '1.2.11';
 var postMessages = {
     PT_RESPONSE: 'PT_RESPONSE',
     PT_HANDLE_REQUEST: 'PT_HANDLE_REQUEST',
@@ -42,7 +42,11 @@ var PortisProvider = /** @class */ (function () {
     PortisProvider.prototype.sendAsync = function (payload, cb) {
         this.enqueue(payload, cb);
     };
-    PortisProvider.prototype.send = function (payload) {
+    PortisProvider.prototype.send = function (payload, cb) {
+        if (cb) {
+            this.sendAsync(payload, cb);
+            return;
+        }
         var result;
         switch (payload.method) {
             case 'eth_accounts':

@@ -2,7 +2,7 @@ import { Payload, Network } from "./types";
 import { isMobile, isLocalhost, randomId } from "./utils";
 import { css } from './style';
 
-const sdkVersion = '1.2.10';
+const sdkVersion = '1.2.11';
 const postMessages = {
     PT_RESPONSE: 'PT_RESPONSE',
     PT_HANDLE_REQUEST: 'PT_HANDLE_REQUEST',
@@ -55,7 +55,12 @@ export class PortisProvider {
         this.enqueue(payload, cb);
     }
 
-    send(payload: Payload) {
+    send(payload: Payload, cb?) {
+        if (cb) {
+            this.sendAsync(payload, cb);
+            return;
+        }
+
         let result;
 
         switch (payload.method) {
