@@ -1,6 +1,6 @@
 import { isMobile, isLocalhost, randomId } from "./utils";
 import { css } from './style';
-var sdkVersion = '1.2.11';
+var sdkVersion = '1.2.12';
 var postMessages = {
     PT_RESPONSE: 'PT_RESPONSE',
     PT_HANDLE_REQUEST: 'PT_HANDLE_REQUEST',
@@ -177,8 +177,11 @@ var PortisProvider = /** @class */ (function () {
         if (item) {
             var payload = item.payload;
             var cb = item.cb;
+            var id = Array.isArray(payload) ?
+                payload.map(function (i) { return i.id; }).join(':') :
+                payload.id;
             this.sendPostMessage(postMessages.PT_HANDLE_REQUEST, payload);
-            this.requests[payload.id] = { payload: payload, cb: cb };
+            this.requests[id] = { payload: payload, cb: cb };
             this.dequeue();
         }
     };
@@ -200,7 +203,9 @@ var PortisProvider = /** @class */ (function () {
                         break;
                     }
                     case postMessages.PT_RESPONSE: {
-                        var id = evt.data.response.id;
+                        var id = Array.isArray(evt.data.response) ?
+                            evt.data.response.map(function (i) { return i.id; }).join(':') :
+                            evt.data.response.id;
                         _this.requests[id].cb(null, evt.data.response);
                         if (_this.requests[id].payload.method === 'eth_accounts' || _this.requests[id].payload.method === 'eth_coinbase') {
                             _this.account = evt.data.response.result[0];

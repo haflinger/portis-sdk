@@ -2,7 +2,7 @@ import { Payload, Network } from "./types";
 import { isMobile, isLocalhost, randomId } from "./utils";
 import { css } from './style';
 
-const sdkVersion = '1.2.11';
+const sdkVersion = '1.2.12';
 const postMessages = {
     PT_RESPONSE: 'PT_RESPONSE',
     PT_HANDLE_REQUEST: 'PT_HANDLE_REQUEST',
@@ -216,8 +216,11 @@ export class PortisProvider {
         if (item) {
             const payload = item.payload;
             const cb = item.cb;
+            const id = Array.isArray(payload) ?
+                payload.map(i => i.id).join(':') :
+                payload.id;
             this.sendPostMessage(postMessages.PT_HANDLE_REQUEST, payload);
-            this.requests[payload.id] = { payload, cb };
+            this.requests[id] = { payload, cb };
             this.dequeue();
         }
     }
@@ -242,7 +245,9 @@ export class PortisProvider {
                     }
 
                     case postMessages.PT_RESPONSE: {
-                        const id = evt.data.response.id;
+                        const id = Array.isArray(evt.data.response) ?
+                            evt.data.response.map(i => i.id).join(':') :
+                            evt.data.response.id;
                         this.requests[id].cb(null, evt.data.response);
 
                         if (this.requests[id].payload.method === 'eth_accounts' || this.requests[id].payload.method === 'eth_coinbase') {
