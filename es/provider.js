@@ -1,6 +1,6 @@
 import { isMobile, isLocalhost, randomId } from "./utils";
 import { css } from './style';
-var sdkVersion = '1.2.12';
+var sdkVersion = '1.2.13';
 var postMessages = {
     PT_RESPONSE: 'PT_RESPONSE',
     PT_HANDLE_REQUEST: 'PT_HANDLE_REQUEST',
@@ -9,6 +9,7 @@ var postMessages = {
     PT_HIDE_IFRAME: 'PT_HIDE_IFRAME',
     PT_USER_DENIED: 'PT_USER_DENIED',
     PT_USER_LOGGED_IN: 'PT_USER_LOGGED_IN',
+    PT_PURCHASE_INITIATED: 'PT_PURCHASE_INITIATED',
 };
 var portisPayloadMethods = {
     SET_DEFAULT_EMAIL: 'SET_DEFAULT_EMAIL',
@@ -241,6 +242,15 @@ var PortisProvider = /** @class */ (function () {
                             .forEach(function (event) { return event.callback({
                             provider: 'portis',
                             address: evt.data.response.address,
+                        }); });
+                        break;
+                    }
+                    case postMessages.PT_PURCHASE_INITIATED: {
+                        _this.events
+                            .filter(function (event) { return event.eventName == 'purchase-initiated'; })
+                            .forEach(function (event) { return event.callback({
+                            provider: 'portis',
+                            purchaseId: evt.data.response.purchaseId,
                         }); });
                         break;
                     }

@@ -222,20 +222,31 @@ web3.currentProvider.showPortis(() => {
 
 The Portis provider emits events using the .on('eventName', callback) scheme.
 
-### event types:
-
-```login``` : When a DApp calls any web3 method which requires the user to login (for instance getAccounts), there is no way for the DApp to know if the callback was successful since the user just logged in to Portis successfully, or if they were already logged in, and it was invoked successfully without having to show the login window to the user.
-
-The ```login``` event allow DApps to detect when a user explicitly logged in successfully to their Portis account. The callback method will return an object containing two values:
-1. ```provider```: will always have the value ```portis```
-1. ```address```: the wallet address of the logged in user
-
 **Example**:
 ```js
-web3.currentProvider.on('login', result => {
-    console.log('user logged in successfully.');
+web3.currentProvider.on('event-type', result => {
+    console.log('event-type was thrown');
 });
 ```
+
+### **Event types:**
+
+#### `login`
+When a DApp calls any web3 method which requires the user to login (for instance getAccounts), there is no way for the DApp to know if the callback was successful since the user just logged in to Portis successfully, or if they were already logged in, and it was invoked successfully without having to show the login window to the user.
+
+The `login` event allow DApps to detect when a user explicitly logged in successfully to their Portis account. The callback method will return an object containing two values:
+1. `provider`: will always have the value `portis`
+1. `address`: the wallet address of the logged in user
+
+
+#### `purchase-initiated`
+When a user initiates an ETH purchase through our third-party provider, the `purchase-initiated` event is thrown.
+
+The callback method will return an object containing two values:
+1. `provider`: will always have the value `portis`
+1. `purchaseId`: a unique indentifier which can be used to poll the purchase status, as documented in the [dashboard](https://app.portis.io/dashboard).
+
+
 
 <hr>
 
