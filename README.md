@@ -215,7 +215,7 @@ You may want to show a user their Portis account without necessarily having them
 ```js
 web3.currentProvider.showPortis(() => {
     console.log('Portis window was closed by the user');
-}));
+});
 ```
 
 ### ```on(eventName: string, callback: function)```
