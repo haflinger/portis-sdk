@@ -1,5 +1,5 @@
 export const css = `
-.wrapper {
+.portis-wrapper {
     display: none;
     position: fixed;
     top: 10px;
@@ -13,7 +13,7 @@ export const css = `
     opacity: 0;
 }
 
-.iframe {
+.portis-iframe {
     display: block;
     width: 100%;
     height: 100%;
@@ -21,7 +21,7 @@ export const css = `
     border-radius: 8px;
 }
 
-.mobile-wrapper {
+.portis-mobile-wrapper {
     display: none;
     position: fixed;
     top: 0;
@@ -32,7 +32,7 @@ export const css = `
     z-index: 2147483647;
 }
 
-.mobile-iframe {
+.portis-mobile-iframe {
     display: block;
     width: 100%;
     height: 100%;

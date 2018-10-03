@@ -130,8 +130,8 @@ export class PortisProvider {
                 const styleElem = document.createElement('style');
                 const viewportMetaTag = document.createElement('meta');
 
-                wrapper.className = mobile ? 'mobile-wrapper' : 'wrapper';
-                iframe.className = mobile ? 'mobile-iframe' : 'iframe';
+                wrapper.className = mobile ? 'portis-mobile-wrapper' : 'portis-wrapper';
+                iframe.className = mobile ? 'portis-mobile-iframe' : 'portis-iframe';
                 iframe.src = `${this.portisClient}/send/?p=${btoa(JSON.stringify(this.referrerAppOptions))}`;
                 styleElem.innerHTML = css;
                 viewportMetaTag.name = 'viewport';

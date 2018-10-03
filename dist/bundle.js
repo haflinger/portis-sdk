@@ -19,7 +19,7 @@ function randomId() {
     return Math.floor(Math.random() * (upperBound - lowerBound) + lowerBound);
 }
 
-var css = "\n.wrapper {\n    display: none;\n    position: fixed;\n    top: 10px;\n    right: 20px;\n    height: 525px;\n    width: 390px;\n    border-radius: 8px;\n    z-index: 2147483647;\n    box-shadow: rgba(0, 0, 0, 0.16) 0px 5px 40px;\n    animation: portis-entrance 250ms ease-in-out forwards;\n    opacity: 0;\n}\n\n.iframe {\n    display: block;\n    width: 100%;\n    height: 100%;\n    border: none;\n    border-radius: 8px;\n}\n\n.mobile-wrapper {\n    display: none;\n    position: fixed;\n    top: 0;\n    left: 0;\n    right: 0;\n    width: 100%;\n    height: 100%;\n    z-index: 2147483647;\n}\n\n.mobile-iframe {\n    display: block;\n    width: 100%;\n    height: 100%;\n    border: none;\n}\n\n@keyframes portis-entrance {\n    100% { opacity: 1; top: 20px; }\n}\n";
+var css = "\n.portis-wrapper {\n    display: none;\n    position: fixed;\n    top: 10px;\n    right: 20px;\n    height: 525px;\n    width: 390px;\n    border-radius: 8px;\n    z-index: 2147483647;\n    box-shadow: rgba(0, 0, 0, 0.16) 0px 5px 40px;\n    animation: portis-entrance 250ms ease-in-out forwards;\n    opacity: 0;\n}\n\n.portis-iframe {\n    display: block;\n    width: 100%;\n    height: 100%;\n    border: none;\n    border-radius: 8px;\n}\n\n.portis-mobile-wrapper {\n    display: none;\n    position: fixed;\n    top: 0;\n    left: 0;\n    right: 0;\n    width: 100%;\n    height: 100%;\n    z-index: 2147483647;\n}\n\n.portis-mobile-iframe {\n    display: block;\n    width: 100%;\n    height: 100%;\n    border: none;\n}\n\n@keyframes portis-entrance {\n    100% { opacity: 1; top: 20px; }\n}\n";
 
 var sdkVersion = '1.2.13';
 var postMessages = {
@@ -126,8 +126,8 @@ var PortisProvider = /** @class */ (function () {
                 var iframe = document.createElement('iframe');
                 var styleElem = document.createElement('style');
                 var viewportMetaTag = document.createElement('meta');
-                wrapper.className = mobile ? 'mobile-wrapper' : 'wrapper';
-                iframe.className = mobile ? 'mobile-iframe' : 'iframe';
+                wrapper.className = mobile ? 'portis-mobile-wrapper' : 'portis-wrapper';
+                iframe.className = mobile ? 'portis-mobile-iframe' : 'portis-iframe';
                 iframe.src = _this.portisClient + "/send/?p=" + btoa(JSON.stringify(_this.referrerAppOptions));
                 styleElem.innerHTML = css;
                 viewportMetaTag.name = 'viewport';
