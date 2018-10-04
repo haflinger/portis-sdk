@@ -105,8 +105,8 @@ var PortisProvider = /** @class */ (function () {
                 var iframe = document.createElement('iframe');
                 var styleElem = document.createElement('style');
                 var viewportMetaTag = document.createElement('meta');
-                wrapper.className = mobile ? 'mobile-wrapper' : 'wrapper';
-                iframe.className = mobile ? 'mobile-iframe' : 'iframe';
+                wrapper.className = mobile ? 'portis-mobile-wrapper' : 'portis-wrapper';
+                iframe.className = mobile ? 'portis-mobile-iframe' : 'portis-iframe';
                 iframe.src = _this.portisClient + "/send/?p=" + btoa(JSON.stringify(_this.referrerAppOptions));
                 styleElem.innerHTML = css;
                 viewportMetaTag.name = 'viewport';
