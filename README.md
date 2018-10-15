@@ -127,6 +127,49 @@ web3.currentProvider.isPortis
 ```
 <hr>
 
+## Usage
+
+[Here](https://plnkr.co/edit/gHp1TrNn9GsvtYuQ3Gqn?p=preview) is an example. (Hit "Run" if you don't see anything, and make sure you either disable MetaMask or use private mode on your browser)
+
+### Getting the user's address
+If you need the user's address, perhaps to authenticate them into your website, you would use the regular `web3.eth.getAccounts` method. Nothing special here:
+
+```js
+// ES7+ async/await
+const accounts = await web3.eth.getAccounts()
+const [address] = accounts
+
+// ES6 Promise
+web3.eth.getAccounts().then(accounts => {
+  const address = accounts[0]
+})
+```
+
+Note that unlike MetaMask, Portis only supports a single wallet per account.
+
+### Using a `personal_sign` method:
+
+More info on `personal_sign` here: https://github.com/ethereum/go-ethereum/wiki/Management-APIs#personal_sign
+
+Again, nothing special here! Use the regular `web3.currentProvider.sendAsync` method:
+
+```js
+web3.currentProvider.sendAsync(
+  {
+    id: 1,
+    method: 'personal_sign',
+    from: address,
+    params: [data, address, password],
+  },
+  (err, result) => {
+    if (err) {
+      throw new Error(err)
+    }
+    authenticateUser(result.result)
+  },
+)
+```
+
 ## Configuration Options
 
 A configuration options object should be passed along when initializing the Portis provider:
