@@ -2,7 +2,7 @@ import { Payload, Network } from "./types";
 import { isMobile, isLocalhost, randomId } from "./utils";
 import { css } from './style';
 
-const sdkVersion = '1.2.13';
+const sdkVersion = '1.2.14';
 const postMessages = {
     PT_RESPONSE: 'PT_RESPONSE',
     PT_HANDLE_REQUEST: 'PT_HANDLE_REQUEST',
@@ -12,6 +12,7 @@ const postMessages = {
     PT_USER_DENIED: 'PT_USER_DENIED',
     PT_USER_LOGGED_IN: 'PT_USER_LOGGED_IN',
     PT_PURCHASE_INITIATED: 'PT_PURCHASE_INITIATED',
+    PT_ON_DATA: 'PT_ON_DATA',
 };
 const portisPayloadMethods = {
     SET_DEFAULT_EMAIL: 'SET_DEFAULT_EMAIL',
@@ -303,6 +304,13 @@ export class PortisProvider {
                                 provider: 'portis',
                                 purchaseId: evt.data.response.purchaseId,
                             }));
+                        break;
+                    }
+
+                    case postMessages.PT_ON_DATA: {
+                        this.events
+                            .filter(event => event.eventName == 'data')
+                            .forEach(event => event.callback(evt.data.response));
                         break;
                     }
                 }
