@@ -86,7 +86,6 @@ var PortisProvider = window.Portis.PortisProvider;
 <hr>
 
 ## Registration
-> When running your dApp on localhost, Portis does not require registration.
 
 Register your dApp on the Portis platform - [https://app.portis.io/dashboard](https://app.portis.io/dashboard).
 
