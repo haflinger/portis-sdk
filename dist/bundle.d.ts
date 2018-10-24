@@ -32,6 +32,7 @@ export class PortisProvider {
         network?: Network;
         infuraApiKey?: string;
         providerNodeUrl?: string;
+        scope?: ScopeType[];
     });
     sendAsync(payload: Payload, cb: any): void;
     send(payload: Payload, cb?: any): {
@@ -52,4 +53,5 @@ export interface Payload {
     params: any[];
 }
 export type Network = 'mainnet' | 'ropsten' | 'kovan' | 'rinkeby' | 'core' | 'sokol';
+export type ScopeType = 'email';
 

@@ -1,4 +1,4 @@
-import { Payload, Network } from "./types";
+import { Payload, Network, ScopeType } from "./types";
 export declare class PortisProvider {
     portisClient: string;
     requests: {
@@ -31,6 +31,7 @@ export declare class PortisProvider {
         network?: Network;
         infuraApiKey?: string;
         providerNodeUrl?: string;
+        scope?: ScopeType[];
     });
     sendAsync(payload: Payload, cb: any): void;
     send(payload: Payload, cb?: any): {

@@ -1,6 +1,6 @@
 import { isMobile, isLocalhost, randomId } from "./utils";
 import { css } from './style';
-var sdkVersion = '1.2.14';
+var sdkVersion = '1.2.15';
 var postMessages = {
     PT_RESPONSE: 'PT_RESPONSE',
     PT_HANDLE_REQUEST: 'PT_HANDLE_REQUEST',
@@ -37,6 +37,7 @@ var PortisProvider = /** @class */ (function () {
             apiKey: opts.apiKey,
             infuraApiKey: opts.infuraApiKey,
             providerNodeUrl: opts.providerNodeUrl,
+            scope: opts.scope,
         };
         this.elements = this.createIframe();
         this.listen();
@@ -243,6 +244,7 @@ var PortisProvider = /** @class */ (function () {
                             .forEach(function (event) { return event.callback({
                             provider: 'portis',
                             address: evt.data.response.address,
+                            email: evt.data.response.email,
                         }); });
                         break;
                     }

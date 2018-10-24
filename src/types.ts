@@ -6,3 +6,4 @@ export interface Payload {
 }
 
 export type Network = 'mainnet' | 'ropsten' | 'kovan' | 'rinkeby' | 'core' | 'sokol';
+export type ScopeType = 'email';

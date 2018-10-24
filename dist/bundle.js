@@ -21,7 +21,7 @@ function randomId() {
 
 var css = "\n.portis-wrapper {\n    display: none;\n    position: fixed;\n    top: 10px;\n    right: 20px;\n    height: 525px;\n    width: 390px;\n    border-radius: 8px;\n    z-index: 2147483647;\n    box-shadow: rgba(0, 0, 0, 0.16) 0px 5px 40px;\n    animation: portis-entrance 250ms ease-in-out forwards;\n    opacity: 0;\n}\n\n.portis-iframe {\n    display: block;\n    width: 100%;\n    height: 100%;\n    border: none;\n    border-radius: 8px;\n}\n\n.portis-mobile-wrapper {\n    display: none;\n    position: fixed;\n    top: 0;\n    left: 0;\n    right: 0;\n    width: 100%;\n    height: 100%;\n    z-index: 2147483647;\n}\n\n.portis-mobile-iframe {\n    display: block;\n    width: 100%;\n    height: 100%;\n    border: none;\n}\n\n@keyframes portis-entrance {\n    100% { opacity: 1; top: 20px; }\n}\n";
 
-var sdkVersion = '1.2.14';
+var sdkVersion = '1.2.15';
 var postMessages = {
     PT_RESPONSE: 'PT_RESPONSE',
     PT_HANDLE_REQUEST: 'PT_HANDLE_REQUEST',
@@ -58,6 +58,7 @@ var PortisProvider = /** @class */ (function () {
             apiKey: opts.apiKey,
             infuraApiKey: opts.infuraApiKey,
             providerNodeUrl: opts.providerNodeUrl,
+            scope: opts.scope,
         };
         this.elements = this.createIframe();
         this.listen();
@@ -264,6 +265,7 @@ var PortisProvider = /** @class */ (function () {
                             .forEach(function (event) { return event.callback({
                             provider: 'portis',
                             address: evt.data.response.address,
+                            email: evt.data.response.email,
                         }); });
                         break;
                     }
