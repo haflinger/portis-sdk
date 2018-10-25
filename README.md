@@ -240,9 +240,11 @@ providerNodeUrl: 'http://localhost:8545'
 
 ## Methods
 
-### ```setDefaultEmail(email: string)```
+### ```setDefaultEmail(email: string, editable: boolean)```
 
 If you already know the user's email address, you can use this method to pre-populate the email field in the login and register pages.
+
+When `editable` is false, all email inputs will be disabled. The default value of `editable` is `true`.
 
 **Example**:
 ```js

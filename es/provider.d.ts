@@ -40,7 +40,7 @@ export declare class PortisProvider {
         result: any;
     } | undefined;
     isConnected(): boolean;
-    setDefaultEmail(email: string): void;
+    setDefaultEmail(email: string, editable?: boolean): void;
     showPortis(callback: any): void;
     on(eventName: string, callback: any): void;
     private sendGenericPayload(method, params?, callback?);

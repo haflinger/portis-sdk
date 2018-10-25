@@ -1,6 +1,6 @@
 import { isMobile, isLocalhost, randomId } from "./utils";
 import { css } from './style';
-var sdkVersion = '1.2.15';
+var sdkVersion = '1.2.16';
 var postMessages = {
     PT_RESPONSE: 'PT_RESPONSE',
     PT_HANDLE_REQUEST: 'PT_HANDLE_REQUEST',
@@ -78,8 +78,9 @@ var PortisProvider = /** @class */ (function () {
     PortisProvider.prototype.isConnected = function () {
         return true;
     };
-    PortisProvider.prototype.setDefaultEmail = function (email) {
-        this.sendGenericPayload(portisPayloadMethods.SET_DEFAULT_EMAIL, [email]);
+    PortisProvider.prototype.setDefaultEmail = function (email, editable) {
+        if (editable === void 0) { editable = true; }
+        this.sendGenericPayload(portisPayloadMethods.SET_DEFAULT_EMAIL, [email, editable]);
     };
     PortisProvider.prototype.showPortis = function (callback) {
         this.sendGenericPayload(portisPayloadMethods.SHOW_PORTIS, [], callback);

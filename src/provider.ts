@@ -2,7 +2,7 @@ import { Payload, Network, ScopeType } from "./types";
 import { isMobile, isLocalhost, randomId } from "./utils";
 import { css } from './style';
 
-const sdkVersion = '1.2.15';
+const sdkVersion = '1.2.16';
 const postMessages = {
     PT_RESPONSE: 'PT_RESPONSE',
     PT_HANDLE_REQUEST: 'PT_HANDLE_REQUEST',
@@ -101,8 +101,8 @@ export class PortisProvider {
         return true;
     }
 
-    setDefaultEmail(email: string) {
-        this.sendGenericPayload(portisPayloadMethods.SET_DEFAULT_EMAIL, [email]);
+    setDefaultEmail(email: string, editable: boolean = true) {
+        this.sendGenericPayload(portisPayloadMethods.SET_DEFAULT_EMAIL, [email, editable]);
     }
 
     showPortis(callback) {
