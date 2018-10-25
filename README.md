@@ -236,6 +236,25 @@ The valid types are `HttpProvider`, `WebsocketProvider` and `IpcProvider`, as de
 providerNodeUrl: 'http://localhost:8545'
 ```
 
+### ```scope```
+
+**Type:** `String[]`
+
+**Default Value:** ```null```
+
+**Required**: ```false```
+
+When a person logs into your DApp via Portis you can request to access a subset of that person's data stored on Portis using the `scope` parameter. Its value is an array of strings of the requested permissions. As of now, the only supported permissions string is `email`. The user can either approve or decline the permissions request. If they approve, their email will be returned in the `login` event.
+
+**Example**:
+```js
+web3js = new Web3(new Portis.PortisProvider({
+ apiKey: 'YOUR_DAPP_API_KEY',
+ network: 'ropsten',
+ scope: ['email']
+}));
+```
+
 <hr>
 
 ## Methods
@@ -278,9 +297,10 @@ web3.currentProvider.on('event-type', result => {
 #### `login`
 When a DApp calls any web3 method which requires the user to login (for instance getAccounts), there is no way for the DApp to know if the callback was successful since the user just logged in to Portis successfully, or if they were already logged in, and it was invoked successfully without having to show the login window to the user.
 
-The `login` event allow DApps to detect when a user explicitly logged in successfully to their Portis account. The callback method will return an object containing two values:
+The `login` event allow DApps to detect when a user explicitly logged in successfully to their Portis account. The callback method will return an object containing:
 1. `provider`: will always have the value `portis`
 1. `address`: the wallet address of the logged in user
+1. `email`: if the `email` permission was requested in the scope, and the user approved sharing it, this value will contain the user's email address
 
 
 #### `purchase-initiated`
