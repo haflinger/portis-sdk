@@ -43,6 +43,7 @@ export declare class PortisProvider {
     setDefaultEmail(email: string, editable?: boolean): void;
     showPortis(callback: any): void;
     on(eventName: string, callback: any): void;
+    enable(): Promise<{}>;
     private sendGenericPayload(method, params?, callback?);
     private createIframe();
     private showIframe();

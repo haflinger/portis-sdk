@@ -2,7 +2,7 @@ import { Payload, Network, ScopeType } from "./types";
 import { isMobile, isLocalhost, randomId } from "./utils";
 import { css } from './style';
 
-const sdkVersion = '1.2.16';
+const sdkVersion = '1.2.17';
 const postMessages = {
     PT_RESPONSE: 'PT_RESPONSE',
     PT_HANDLE_REQUEST: 'PT_HANDLE_REQUEST',
@@ -113,7 +113,19 @@ export class PortisProvider {
         this.events.push({ eventName, callback });
     }
 
-    private sendGenericPayload(method: string, params: any[] = [], callback = _ => _) {
+    enable() {
+        return new Promise((resolve, reject) => {
+            this.sendGenericPayload('eth_accounts', undefined, (err, resp) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(resp.result);
+                }
+            })
+        });
+    }
+
+    private sendGenericPayload(method: string, params: any[] = [], callback: (err, resp) => any = _ => _) {
         const payload = {
             id: randomId(),
             jsonrpc: '2.0',

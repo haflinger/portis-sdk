@@ -44,6 +44,7 @@ export class PortisProvider {
     setDefaultEmail(email: string, editable?: boolean): void;
     showPortis(callback: any): void;
     on(eventName: string, callback: any): void;
+    enable(): Promise<{}>;
 }
 
 export interface Payload {

@@ -21,7 +21,7 @@ function randomId() {
 
 var css = "\n.portis-wrapper {\n    display: none;\n    position: fixed;\n    top: 10px;\n    right: 20px;\n    height: 525px;\n    width: 390px;\n    border-radius: 8px;\n    z-index: 2147483647;\n    box-shadow: rgba(0, 0, 0, 0.16) 0px 5px 40px;\n    animation: portis-entrance 250ms ease-in-out forwards;\n    opacity: 0;\n}\n\n.portis-iframe {\n    display: block;\n    width: 100%;\n    height: 100%;\n    border: none;\n    border-radius: 8px;\n}\n\n.portis-mobile-wrapper {\n    display: none;\n    position: fixed;\n    top: 0;\n    left: 0;\n    right: 0;\n    width: 100%;\n    height: 100%;\n    z-index: 2147483647;\n}\n\n.portis-mobile-iframe {\n    display: block;\n    width: 100%;\n    height: 100%;\n    border: none;\n}\n\n@keyframes portis-entrance {\n    100% { opacity: 1; top: 20px; }\n}\n";
 
-var sdkVersion = '1.2.16';
+var sdkVersion = '1.2.17';
 var postMessages = {
     PT_RESPONSE: 'PT_RESPONSE',
     PT_HANDLE_REQUEST: 'PT_HANDLE_REQUEST',
@@ -108,6 +108,19 @@ var PortisProvider = /** @class */ (function () {
     };
     PortisProvider.prototype.on = function (eventName, callback) {
         this.events.push({ eventName: eventName, callback: callback });
+    };
+    PortisProvider.prototype.enable = function () {
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            _this.sendGenericPayload('eth_accounts', undefined, function (err, resp) {
+                if (err) {
+                    reject(err);
+                }
+                else {
+                    resolve(resp.result);
+                }
+            });
+        });
     };
     PortisProvider.prototype.sendGenericPayload = function (method, params, callback) {
         if (params === void 0) { params = []; }

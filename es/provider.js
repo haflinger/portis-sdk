@@ -1,6 +1,6 @@
 import { isMobile, isLocalhost, randomId } from "./utils";
 import { css } from './style';
-var sdkVersion = '1.2.16';
+var sdkVersion = '1.2.17';
 var postMessages = {
     PT_RESPONSE: 'PT_RESPONSE',
     PT_HANDLE_REQUEST: 'PT_HANDLE_REQUEST',
@@ -87,6 +87,19 @@ var PortisProvider = /** @class */ (function () {
     };
     PortisProvider.prototype.on = function (eventName, callback) {
         this.events.push({ eventName: eventName, callback: callback });
+    };
+    PortisProvider.prototype.enable = function () {
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            _this.sendGenericPayload('eth_accounts', undefined, function (err, resp) {
+                if (err) {
+                    reject(err);
+                }
+                else {
+                    resolve(resp.result);
+                }
+            });
+        });
     };
     PortisProvider.prototype.sendGenericPayload = function (method, params, callback) {
         if (params === void 0) { params = []; }
