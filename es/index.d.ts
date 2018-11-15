@@ -1,1 +1,0 @@
-export { PortisProvider } from "./provider";

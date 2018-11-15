@@ -54,6 +54,20 @@ export class PortisProvider {
         this.listen();
     }
 
+    changeNetwork(opts: { network?: Network, providerNodeUrl?: string }) {
+    
+        this.referrerAppOptions.network = opts.network || 'mainnet';
+        this.referrerAppOptions.providerNodeUrl = opts.providerNodeUrl || null;
+
+        const mobile = isMobile();
+        const iframe: HTMLIFrameElement | null = mobile ? document.querySelector('.portis-mobile-iframe') : document.querySelector('.portis-iframe');
+
+        if(iframe) {
+            iframe.src = `${this.portisClient}/send/?p=${btoa(JSON.stringify(this.referrerAppOptions))}`;
+        }
+    
+    }
+
     sendAsync(payload: Payload, cb) {
         this.enqueue(payload, cb);
     }
