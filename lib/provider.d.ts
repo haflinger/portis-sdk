@@ -33,6 +33,10 @@ export declare class PortisProvider {
         providerNodeUrl?: string;
         scope?: ScopeType[];
     });
+    changeNetwork(opts: {
+        network?: Network;
+        providerNodeUrl?: string;
+    }): void;
     sendAsync(payload: Payload, cb: any): void;
     send(payload: Payload, cb?: any): {
         id: number;
