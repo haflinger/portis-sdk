@@ -42,6 +42,15 @@ var PortisProvider = /** @class */ (function () {
         this.elements = this.createIframe();
         this.listen();
     }
+    PortisProvider.prototype.changeNetwork = function (opts) {
+        this.referrerAppOptions.network = opts.network || 'mainnet';
+        this.referrerAppOptions.providerNodeUrl = opts.providerNodeUrl || null;
+        var mobile = isMobile();
+        var iframe = mobile ? document.querySelector('portis-mobile-iframe') : document.querySelector('portis-iframe');
+        if (iframe) {
+            iframe.src = this.portisClient + "/send/?p=" + btoa(JSON.stringify(this.referrerAppOptions));
+        }
+    };
     PortisProvider.prototype.sendAsync = function (payload, cb) {
         this.enqueue(payload, cb);
     };
